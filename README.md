@@ -126,8 +126,6 @@ Trang `thong-bao-dien-thoai.html` gồm 4 màn hình tương tác:
 
 <img width="1402" height="782" alt="image" src="https://github.com/user-attachments/assets/fa6b5fb2-3e0e-4d4c-bf16-038ad3ab2a62" />
 
-<img width="332" height="727" alt="image" src="https://github.com/user-attachments/assets/5c1d4066-d5bd-4055-abe8-d4792f484a6c" />
-
 ## 5. Hướng dẫn demo
 
 Kịch bản gợi ý cho buổi thuyết trình, khoảng 5–7 phút:
