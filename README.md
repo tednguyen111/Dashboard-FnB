@@ -127,6 +127,4 @@ Trang `thong-bao-dien-thoai.html` gồm 4 màn hình tương tác:
 <img width="1402" height="782" alt="image" src="https://github.com/user-attachments/assets/fa6b5fb2-3e0e-4d4c-bf16-038ad3ab2a62" />
 
 ---
-**Công nghệ:** React 19, TypeScript, Vite, Tailwind CSS v4, lucide-react.
----
 **Tác giả:** Nguyễn Tuấn Đạt · Business Analyst
