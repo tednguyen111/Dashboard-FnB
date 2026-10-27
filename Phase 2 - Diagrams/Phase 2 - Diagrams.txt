@@ -1,0 +1,210 @@
+================================================================================
+PHASE 2 -- DIAGRAMS
+Project: Room Occupancy Analytics
+Phiên bản: 1.4
+Tác giả BA: Nguyễn Tuấn Đạt
+================================================================================
+
+DANH SÁCH DIAGRAMS
+  Diagram 1A  -- BPMN Swimlane: Luồng Check-in → Check-out + Long Session Alert
+                 File: fraud-alert-level 1 & 2
+                 Tool: Draw.io
+
+  Diagram 1B  -- Flowchart: Dashboard (US-001, US-002, US-003)
+                 File: app-widget-avg-heatmap
+                 Tool: Draw.io
+
+  Diagram 1C  -- Flowchart: Xem Heatmap chi tiết (US-002 AC-7)
+                 File: Phase 2 - Diagrams.txt (section này)
+                 Tool: Mermaid
+
+  Diagram 1D  -- Flowchart: Mật độ phòng trên điện thoại (US-007)
+                 File: Phase 2 - Diagrams.txt (section này)
+                 Tool: Mermaid
+
+  Diagram 2   -- Sequence Diagram: Technical flow
+                 [TO BE DEFINED BY DEV / SA TEAM]
+
+  Diagram 3A  -- BPMN Swimlane: Full Room Notification
+                 File: full-room-noti
+                 Tool: Draw.io
+
+================================================================================
+DIAGRAM 1A -- BPMN Swimlane: Luồng Check-in → Check-out + Long Session Alert
+US liên quan: US-005, US-006
+================================================================================
+
+Xem file Draw.io: fraud-alert-level 1 & 2
+
+Mô tả 3 lanes:
+  - NHÂN VIÊN     : Check-in → Ghi nhận phòng + giờ vào → Khách sử dụng phòng
+                    → Check-out → Tính duration, tạo hóa đơn → Khách thanh toán → Kết thúc
+  - HỆ THỐNG      : Khởi tạo Session Monitor khi check-in
+                    → Timer Mức 1 (mốc X tiếng) → Cảnh báo Mức 1 (combo sắp hết)
+                    → Timer Mức 2 (mốc 12 tiếng) → Cảnh báo Mức 2 (bất thường)
+                    → Check-out → Dừng Session Monitor, tắt cảnh báo chưa kích hoạt
+  - QUẢN LÝ       : Nhận push notification Mức 1 → Kiểm tra combo / giá lẻ
+                    Nhận push notification Mức 2 → Xác minh và xử lý
+
+================================================================================
+DIAGRAM 1B -- Flowchart: Dashboard (3 widget)
+US liên quan: US-001, US-002, US-003
+================================================================================
+
+Xem file Draw.io: app-widget-avg-heatmap
+
+Mô tả (dóng từ prototype Phase 4):
+  - Widget 1 (Tỷ lệ phủ phòng): số liệu real-time, click thẻ → mở Phòng/Bàn
+  - Widget 2 (Mật độ sử dụng phòng): thu gọn mặc định (3 số liệu: TB · Cao điểm · Vắng nhất)
+    Bấm vào dòng số liệu → heatmap bảng màu mở rộng trong thẻ
+    Rê chuột vào ô → tooltip: Thứ · Giờ · % phủ · Số phòng TB
+    Bấm lần nữa → thu gọn lại
+    Bấm "Xem chi tiết theo loại phòng" → mở trang Heatmap chi tiết (Diagram 1C)
+  - Widget 3 (AVG Usage Time): lọc thời gian (Hôm nay / Hôm qua / 7 ngày / 30 ngày / Tháng này / Tùy chọn)
+    → AVG cập nhật theo loại phòng
+
+================================================================================
+DIAGRAM 1C -- Flowchart: Xem Heatmap chi tiết theo loại phòng
+US liên quan: US-002 AC-7
+================================================================================
+
+Mô tả:
+  Từ widget heatmap dashboard → bấm "Xem chi tiết theo loại phòng"
+  → mở trang chi tiết với heatmap lớn, lọc loại phòng, date range picker,
+  nút Xuất file, và panel chi tiết khi bấm một ô.
+
+-- COPY ĐOẠN NÀY VÀO https://mermaid.live --
+
+flowchart LR
+    A([Bấm Xem chi tiết\ntheo loại phòng]) --> B[Trang Heatmap\nchi tiết]
+
+    B --> SUM[4 số liệu tóm tắt:\nPhủ TB · Cao điểm\nVắng nhất · Ngày đông nhất]
+    B --> C[Heatmap lớn 7×24\nchỉ màu sắc, không số]
+
+    B --> F1{Lọc\nloại phòng}
+    F1 -->|Tất cả / Couple\nStandard / Big / VIP| C
+
+    B --> F2{Chọn\ndate range}
+    F2 -->|7 ngày / 4 tuần\nTháng này / Tháng trước\n3 tháng qua| C
+    F2 -->|Tùy chọn| V{Validate}
+    V -->|Hợp lệ\n≥7 ngày, trong 90 ngày| C
+    V -->|Không hợp lệ\nbắt đầu > kết thúc\nhoặc <7 ngày\nhoặc ngoài 90 ngày| ERR[Hiện lỗi\nKhông áp dụng]
+
+    C -->|Bấm một ô| D[Panel chi tiết:\n% phủ · Số phòng TB\nChênh lệch vs TB cùng giờ\nBiểu đồ cả ngày\n% theo loại phòng]
+
+    B -->|Nút Xuất file| X[Xuất CSV]
+
+    style A fill:#4CAF50,color:#fff
+    style ERR fill:#FFCDD2,color:#000
+    style X fill:#E8F5E9,color:#000
+
+-- HẾT DIAGRAM 1C --
+
+================================================================================
+DIAGRAM 1D -- Flowchart: Mật độ phòng trên điện thoại
+US liên quan: US-007
+================================================================================
+
+Mô tả:
+  Persona 1 (Chủ quán) mở app điện thoại → tab Tổng quan → màn hình
+  "Mật độ phòng". Gồm 2 card độc lập: (1) Heatmap theo khung giờ,
+  (2) Theo loại phòng. Mặc định heatmap hiện giờ mở cửa để vừa màn hình.
+  Dóng từ màn hình 4 trong prototype /thong-bao-dien-thoai.html.
+
+-- COPY ĐOẠN NÀY VÀO https://mermaid.live --
+
+flowchart TD
+    A([Chủ quán\nmở app điện thoại]) --> B[Tab Tổng quan\nMàn hình Mật độ phòng]
+
+    B --> RNG{Chọn khoảng}
+    RNG -->|7 ngày| UPD[Cập nhật toàn bộ\nsố liệu + heatmap]
+    RNG -->|4 tuần mặc định| UPD
+    RNG -->|Tháng này| UPD
+
+    B --> KPI[3 KPI cards:\nPhủ TB + chênh lệch kỳ trước\nCao điểm · Vắng nhất]
+    B --> TODAY[Dòng so sánh:\nHôm nay đến giờ hiện tại\nvs cùng thứ tuần trước]
+
+    B --> CARD1[Card Theo khung giờ]
+    CARD1 --> SEG{Segmented control}
+    SEG -->|Giờ mở cửa mặc định| HM[Heatmap 7 × 16 cột\nvừa màn hình, không cuộn]
+    SEG -->|Cả ngày| HM24[Heatmap 7 × 24\ncuộn ngang]
+    HM -->|Chạm một ô| INFO[Hiện bên dưới lưới:\nThứ · Khung giờ\n% phủ · Số phòng TB]
+    HM24 -->|Chạm một ô| INFO
+    HM -->|Mặc định| PEAK[Ô cao điểm\nđược chọn sẵn]
+
+    B --> CARD2[Card Theo loại phòng:\n% phủ TB từng loại\nxếp từ cao xuống thấp\nLoại thấp nhất → nhãn Thấp nhất]
+
+    style A fill:#4CAF50,color:#fff
+    style PEAK fill:#FFF9C4,color:#000
+    style CARD1 fill:#E3F2FD,color:#000
+    style CARD2 fill:#E3F2FD,color:#000
+
+-- HẾT DIAGRAM 1D --
+
+================================================================================
+DIAGRAM 2 -- Sequence Diagram: Technical Flow
+================================================================================
+
+[TO BE DEFINED BY DEV / SA TEAM]
+
+Lý do chưa vẽ:
+  Sequence diagram đi sâu vào technical implementation (API endpoint,
+  database schema, response format) -- thuộc trách nhiệm của Solution
+  Architect hoặc Dev Team, không phải BA.
+
+  BA cung cấp:
+    - Business flow  : Diagram 1A (BPMN Swimlane)
+    - User journey   : Diagram 1B + 1C + 1D (Flowchart)
+    - Business Rules : Phase 1 - User Stories V0.7.txt
+
+  Dev/SA sẽ thiết kế:
+    - API endpoints và request/response format
+    - Database schema và query logic
+    - Error handling ở tầng kỹ thuật
+
+================================================================================
+DIAGRAM 3A -- BPMN Swimlane: Full Room Notification
+US liên quan: US-004, US-006
+================================================================================
+
+Xem file Draw.io: full-room-noti
+
+Mô tả 3 lanes:
+  - NHÂN VIÊN     : Check-in phòng cuối → Gateway "Toàn bộ phòng kín?"
+                    Không → Vận hành bình thường
+                    Có    → trigger sang Hệ thống
+  - HỆ THỐNG      : Kiểm tra toggle kín phòng bật?
+                    Có → Gửi push notification trong vòng 60 giây
+                    Không → Chỉ cập nhật dashboard
+  - QUẢN LÝ       : Nhận push notification "Tất cả phòng đã có khách"
+                    → Ngừng nhận booking online / thông báo khách walk-in
+
+================================================================================
+TỔNG KẾT DIAGRAMS
+================================================================================
+
+  ID          | Tên                                          | Tool      | Trạng thái
+  ------------|----------------------------------------------|-----------|------------
+  Diagram 1A  | Check-in flow + Long Session Alert           | Draw.io   | Hoàn thành
+  Diagram 1B  | Dashboard 3 widget                           | Draw.io   | Hoàn thành
+  Diagram 1C  | Heatmap chi tiết theo loại phòng             | Mermaid   | Hoàn thành
+  Diagram 1D  | Mật độ phòng trên điện thoại (US-007)        | Mermaid   | Hoàn thành
+  Diagram 2   | Technical Sequence                           | --        | Dev/SA làm
+  Diagram 3A  | Full Room Notification                       | Draw.io   | Hoàn thành
+
+================================================================================
+LỊCH SỬ THAY ĐỔI
+================================================================================
+
+v0.1 | Draft đầu tiên                              | Nguyễn Tuấn Đạt | 24/10/2026
+v1.0 | Viết lại sạch toàn bộ                       | Nguyễn Tuấn Đạt | 24/10/2026
+v1.1 | AVG Time tích hợp drawer (đã revert)        | Nguyễn Tuấn Đạt | 24/10/2026
+v1.2 | Tách 1B thành 1B + 1C                       | Nguyễn Tuấn Đạt | 24/10/2026
+v1.3 | Cập nhật theo US V0.7, dóng từ prototype    | Nguyễn Tuấn Đạt | 27/10/2026
+     | 1B: Thêm Widget 2 (heatmap), sửa W1 click   |                 |
+     |     → Phòng/Bàn; 1C: đổi entry point        |                 |
+     | 1D: Thêm mới — Mật độ phòng mobile (US-007) |                 |
+v1.4 | Cập nhật theo 3 file diagram đã sửa         | Nguyễn Tuấn Đạt | 27/10/2026
+     | 1B: Chuyển sang Draw.io (app-widget-avg-heatmap)|             |
+     |     Widget 2 có expand/collapse + tooltip   |                 |
+     | 1A, 3A: Giữ nguyên nội dung gốc, bỏ tag ⚠️  |                 |

@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Điện thoại Quản lý · Figma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!--
+  Figma-ready version of thong-bao-dien-thoai.html
+  - Static: no JavaScript, every state is drawn as its own screen
+  - Flexbox only (maps to Auto Layout), no grid
+  - No ::before/::after, no backdrop-filter, no animation, no CSS variables
+  - Each screen is a 393 x 852 frame (iPhone 15/16), no device bezel
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter, Arial, sans-serif; color: #1F2329; background: #EEF3FA; padding: 40px; }
+  .board { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
+  .artboard { display: flex; flex-direction: column; gap: 12px; }
+  .artboard-label { font-size: 16px; font-weight: 600; color: #4E5969; }
+
+  /* ---------- Screen frame ---------- */
+  .screen { position: relative; width: 393px; height: 852px; overflow: hidden; display: flex; flex-direction: column; background: #FFFFFF; border-radius: 0; }
+
+  .status-bar { width: 393px; height: 54px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 14px 32px 0 40px; }
+  .status-time { font-size: 17px; font-weight: 600; }
+  .status-icons { display: flex; align-items: center; gap: 6px; }
+  .status-icons svg { display: block; }
+  .dynamic-island { position: absolute; top: 11px; left: 135px; width: 123px; height: 36px; border-radius: 20px; background: #000000; }
+  .home-indicator { position: absolute; bottom: 8px; left: 129px; width: 135px; height: 5px; border-radius: 3px; background: #1F2329; }
+
+  /* ---------- Lock screen ---------- */
+  .lock { background: linear-gradient(180deg, #3D8BFF 0%, #1557C0 55%, #0B2F7A 100%); color: #FFFFFF; }
+  .lock .home-indicator { background: #FFFFFF; }
+  .lock-clock { display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 18px; }
+  .lock-date { font-size: 18px; font-weight: 500; color: #E6EEFF; }
+  .lock-time { font-size: 84px; font-weight: 600; line-height: 96px; letter-spacing: -2px; }
+  .lock-stack { display: flex; flex-direction: column; gap: 10px; padding: 28px 12px 0; }
+
+  .push-card { display: flex; gap: 12px; padding: 12px 14px; border-radius: 22px; background: #F2F5FA; color: #1F2329; }
+  .push-icon { width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px; background: #0070F4; color: #FFFFFF; font-size: 19px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .push-body { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .push-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .push-title { display: flex; flex-wrap: nowrap; white-space: nowrap; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; line-height: 20px; }
+  .push-time { font-size: 12px; color: #86909C; white-space: nowrap; line-height: 20px; }
+  .push-text { font-size: 15px; line-height: 20px; color: #4E5969; }
+
+  /* ---------- Level tags ---------- */
+  .tag { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 5px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .tag-l1 { background: #FFF1DB; color: #D46B08; }
+  .tag-l2 { background: #FFE4E3; color: #CB2634; }
+  .tag-full { background: #E3EEFF; color: #0070F4; }
+
+  /* ---------- App header ---------- */
+  .app-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px 12px; }
+  .app-title { font-size: 30px; font-weight: 700; }
+  .app-action { font-size: 15px; font-weight: 600; color: #0070F4; }
+  .chips { display: flex; gap: 8px; padding: 0 20px 12px; }
+  .chip { display: flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 17px; background: #F2F3F5; color: #4E5969; font-size: 14px; }
+  .chip-active { background: #0070F4; color: #FFFFFF; font-weight: 600; }
+
+  .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .section-label { padding: 12px 20px 6px; font-size: 13px; font-weight: 600; color: #86909C; letter-spacing: 0.4px; }
+
+  /* ---------- Notification row ---------- */
+  .noti-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 20px; border-bottom: 1px solid #ECEEF2; background: #FFFFFF; }
+  .noti-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+  .noti-icon-l1 { background: #FFF7E8; color: #D46B08; }
+  .noti-icon-l2 { background: #FFF1F0; color: #CB2634; }
+  .noti-icon-full { background: #EBF3FF; color: #0070F4; }
+  .noti-body { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .noti-title { font-size: 16px; font-weight: 600; line-height: 21px; }
+  .noti-text { font-size: 14px; line-height: 19px; color: #4E5969; }
+  .noti-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .noti-time { font-size: 13px; color: #86909C; }
+  .unread-dot { width: 9px; height: 9px; border-radius: 5px; background: #0070F4; }
+  .unread-dot-hidden { background: transparent; }
+
+  /* ---------- Tab bar ---------- */
+  .tab-bar { flex-shrink: 0; display: flex; height: 84px; padding: 8px 6px 30px; border-top: 1px solid #ECEEF2; background: #FFFFFF; }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; color: #86909C; }
+  .tab-active { color: #0070F4; font-weight: 600; }
+  .tab-icon { position: relative; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+  .tab-badge { position: absolute; top: -5px; left: 14px; height: 18px; min-width: 18px; padding: 0 5px; border-radius: 9px; border: 2px solid #FFFFFF; background: #F53F3F; color: #FFFFFF; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+  /* ---------- Bottom sheet ---------- */
+  .scrim { position: absolute; left: 0; top: 0; width: 393px; height: 852px; background: rgba(15, 20, 30, 0.38); }
+  .sheet { position: absolute; left: 0; bottom: 0; width: 393px; display: flex; flex-direction: column; gap: 14px; padding: 10px 20px 40px; border-radius: 24px 24px 0 0; background: #FFFFFF; }
+  .sheet-grabber { align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #D9DCE1; }
+  .sheet-head { display: flex; flex-direction: column; gap: 2px; }
+  .sheet-title { font-size: 22px; font-weight: 700; }
+  .sheet-sub { font-size: 14px; color: #86909C; }
+  .sheet-alert { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #FFF1F0; color: #CB2634; font-size: 14px; }
+  .sheet-alert b { font-weight: 700; }
+  .facts { display: flex; flex-wrap: wrap; gap: 14px 0; }
+  .fact { width: 50%; display: flex; flex-direction: column; gap: 2px; }
+  .fact-label { font-size: 13px; color: #86909C; }
+  .fact-value { font-size: 16px; font-weight: 600; }
+  .fact-value-l2 { color: #CB2634; }
+  .sheet-actions { display: flex; gap: 10px; padding-top: 4px; }
+  .btn { flex: 1; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; }
+  .btn-secondary { border: 1px solid #B8D4FF; background: #FFFFFF; color: #0070F4; }
+  .btn-primary { background: #0070F4; color: #FFFFFF; }
+
+  /* ---------- Settings ---------- */
+  .settings-card { margin: 0 16px; border: 1px solid #ECEEF2; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; }
+  .setting-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #ECEEF2; }
+  .setting-row-last { border-bottom: 0; }
+  .setting-text { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .setting-title { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 600; }
+  .setting-desc { font-size: 13px; line-height: 18px; color: #86909C; }
+  .switch { width: 51px; height: 31px; flex-shrink: 0; border-radius: 16px; padding: 2px; display: flex; align-items: center; background: #34C759; }
+  .switch-on { background: #0070F4; justify-content: flex-end; }
+  .switch-off { background: #D1D5DB; justify-content: flex-start; }
+  .switch-knob { width: 27px; height: 27px; border-radius: 14px; background: #FFFFFF; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18); }
+  .info-box { margin: 12px 16px 0; padding: 12px 14px; border-radius: 12px; background: #F2F3F5; font-size: 13px; line-height: 19px; color: #4E5969; }
+
+  /* ---------- 06 Mobile occupancy (US-007) ---------- */
+  .screen-long { height: auto; min-height: 852px; }
+  .period { padding: 0 20px 10px; margin-top: -6px; font-size: 14px; color: #86909C; }
+  .kpi-row { display: flex; gap: 8px; padding: 0 16px 12px; }
+  .kpi-card { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border: 1px solid #ECEEF2; border-radius: 14px; }
+  .kpi-label { font-size: 12px; color: #86909C; }
+  .kpi-value { font-size: 19px; font-weight: 700; }
+  .kpi-delta { font-size: 12px; font-weight: 600; color: #00B14F; }
+  .today-box { margin: 0 16px 12px; padding: 12px 14px; border-radius: 14px; background: #EBF3FF; font-size: 14px; line-height: 20px; color: #4E5969; }
+  .today-box b { color: #1F2329; }
+  .today-delta { font-weight: 600; color: #00B14F; }
+  .m-card { margin: 0 16px 12px; padding: 14px; border: 1px solid #ECEEF2; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .m-card-head { display: flex; align-items: center; justify-content: space-between; }
+  .m-card-title { font-size: 16px; font-weight: 600; }
+  .segmented { display: flex; padding: 2px; border-radius: 9px; background: #F2F3F5; }
+  .segment { display: flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 7px; font-size: 12px; color: #4E5969; }
+  .segment-active { background: #0070F4; color: #FFFFFF; font-weight: 600; }
+  .hm { display: flex; flex-direction: column; gap: 3px; }
+  .hm-row { display: flex; align-items: center; gap: 3px; }
+  .hm-day { width: 22px; flex-shrink: 0; font-size: 12px; font-weight: 500; color: #4E5969; }
+  .hm-cell { flex: 1; height: 19px; border-radius: 3px; }
+  .hm-cell-selected { border: 2px solid #FF8A00; }
+  .hm-hour { flex: 1; font-size: 10px; color: #86909C; white-space: nowrap; overflow: visible; height: 13px; }
+  .cell-info { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #F2F3F5; }
+  .cell-info-title { font-size: 14px; font-weight: 600; }
+  .cell-info-text { font-size: 13px; color: #4E5969; }
+  .legend-row { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #86909C; }
+  .legend-swatch { width: 18px; height: 10px; border-radius: 2px; }
+  .type-row { display: flex; flex-direction: column; gap: 5px; }
+  .type-label { display: flex; justify-content: space-between; font-size: 14px; color: #4E5969; }
+  .type-name { display: flex; align-items: center; gap: 6px; }
+  .type-low { font-size: 11px; font-weight: 600; color: #D46B08; background: #FFF7E8; padding: 1px 6px; border-radius: 4px; }
+  .type-value { font-weight: 600; color: #1F2329; }
+  .type-track { height: 8px; border-radius: 4px; background: #F2F3F5; display: flex; }
+  .type-fill { height: 8px; border-radius: 4px; background: #0070F4; }
+  .footnote { padding: 4px 20px 20px; font-size: 12px; color: #86909C; text-align: center; }
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- =============================================================== -->
+  <!-- 01 Màn hình khóa                                                -->
+  <!-- =============================================================== -->
+  <section class="artboard">
+    <div class="artboard-label">01 · Màn hình khóa</div>
+    <div class="screen lock" id="01-man-hinh-khoa">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <span class="status-time">22:40</span>
+        <span class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#FFFFFF"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#FFFFFF" opacity="0.5"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#FFFFFF"/><rect x="24.5" y="4.5" width="1.5" height="4" rx="0.75" fill="#FFFFFF" opacity="0.5"/></svg>
+        </span>
+      </div>
+      <div class="lock-clock">
+        <span class="lock-date">Thứ Ba, 27 tháng 10</span>
+        <span class="lock-time">22:40</span>
+      </div>
+      <div class="lock-stack">
+        <div class="push-card">
+          <div class="push-icon">D</div>
+          <div class="push-body">
+            <div class="push-head">
+              <span class="push-title"><span class="tag tag-l2">Mức 2</span>Phòng 06 · Bất thường</span>
+              <span class="push-time">bây giờ</span>
+            </div>
+            <span class="push-text">Đã dùng 12 giờ 40 phút (ngưỡng 12 giờ). Kiểm tra ngay.</span>
+          </div>
+        </div>
+        <div class="push-card">
+          <div class="push-icon">D</div>
+          <div class="push-body">
+            <div class="push-head">
+              <span class="push-title"><span class="tag tag-l1">Mức 1</span>Phòng 02 · Combo sắp hết</span>
+              <span class="push-time">5 phút</span>
+            </div>
+            <span class="push-text">Combo 3 giờ, còn 15 phút.</span>
+          </div>
+        </div>
+        <div class="push-card">
+          <div class="push-icon">D</div>
+          <div class="push-body">
+            <div class="push-head">
+              <span class="push-title"><span class="tag tag-l1">Mức 1</span>Phòng 04 · Combo sắp hết</span>
+              <span class="push-time">5 phút</span>
+            </div>
+            <span class="push-text">Combo Đêm 7 giờ, còn 15 phút.</span>
+          </div>
+        </div>
+        <div class="push-card">
+          <div class="push-icon">D</div>
+          <div class="push-body">
+            <div class="push-head">
+              <span class="push-title"><span class="tag tag-full">Kín phòng</span>Man Mát CS2</span>
+              <span class="push-time">21:45</span>
+            </div>
+            <span class="push-text">Tất cả 10 phòng đã có khách.</span>
+          </div>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- 02 Danh sách thông báo                                          -->
+  <!-- =============================================================== -->
+  <section class="artboard">
+    <div class="artboard-label">02 · Danh sách thông báo</div>
+    <div class="screen" id="02-danh-sach-thong-bao">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <span class="status-time">22:41</span>
+        <span class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#1F2329"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#1F2329" opacity="0.4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#1F2329"/><rect x="24.5" y="4.5" width="1.5" height="4" rx="0.75" fill="#1F2329" opacity="0.4"/></svg>
+        </span>
+      </div>
+      <div class="app-header">
+        <span class="app-title">Thông báo</span>
+        <span class="app-action">Đã đọc tất cả</span>
+      </div>
+      <div class="chips">
+        <span class="chip chip-active">Tất cả</span>
+        <span class="chip">Cảnh báo phòng</span>
+        <span class="chip">Kín phòng</span>
+      </div>
+      <div class="content">
+        <span class="section-label">HÔM NAY</span>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-l2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CB2634" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Phòng 06 · Bất thường</span>
+            <span class="noti-text">Đã dùng 12 giờ 40 phút (ngưỡng 12 giờ)</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">22:40</span><span class="unread-dot"></span></div>
+        </div>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-l1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D46B08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Phòng 02 · Combo sắp hết</span>
+            <span class="noti-text">Combo 3 giờ, còn 15 phút</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">22:35</span><span class="unread-dot"></span></div>
+        </div>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-l1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D46B08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Phòng 04 · Combo sắp hết</span>
+            <span class="noti-text">Combo Đêm 7 giờ, còn 15 phút</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">22:35</span><span class="unread-dot"></span></div>
+        </div>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-full">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Kín phòng</span>
+            <span class="noti-text">Tất cả 10 phòng đã có khách</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">21:45</span><span class="unread-dot unread-dot-hidden"></span></div>
+        </div>
+        <span class="section-label">HÔM QUA</span>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-full">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0070F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Kín phòng</span>
+            <span class="noti-text">Tất cả 10 phòng đã có khách</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">20:30</span><span class="unread-dot unread-dot-hidden"></span></div>
+        </div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+          <span>Tổng quan</span>
+        </div>
+        <div class="tab">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <span>Phòng/Bàn</span>
+        </div>
+        <div class="tab tab-active">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0070F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><span class="tab-badge">3</span></div>
+          <span>Thông báo</span>
+        </div>
+        <div class="tab">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+          <span>Tài khoản</span>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- 03 Bảng tóm tắt phòng (mở từ thông báo Mức 2)                     -->
+  <!-- =============================================================== -->
+  <section class="artboard">
+    <div class="artboard-label">03 · Bấm thông báo: tóm tắt phòng</div>
+    <div class="screen" id="03-tom-tat-phong">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <span class="status-time">22:41</span>
+        <span class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#1F2329"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#1F2329" opacity="0.4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#1F2329"/><rect x="24.5" y="4.5" width="1.5" height="4" rx="0.75" fill="#1F2329" opacity="0.4"/></svg>
+        </span>
+      </div>
+      <div class="app-header">
+        <span class="app-title">Thông báo</span>
+        <span class="app-action">Đã đọc tất cả</span>
+      </div>
+      <div class="chips">
+        <span class="chip chip-active">Tất cả</span>
+        <span class="chip">Cảnh báo phòng</span>
+        <span class="chip">Kín phòng</span>
+      </div>
+      <div class="content">
+        <span class="section-label">HÔM NAY</span>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-l2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#CB2634" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Phòng 06 · Bất thường</span>
+            <span class="noti-text">Đã dùng 12 giờ 40 phút (ngưỡng 12 giờ)</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">22:40</span><span class="unread-dot unread-dot-hidden"></span></div>
+        </div>
+        <div class="noti-row">
+          <div class="noti-icon noti-icon-l1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D46B08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </div>
+          <div class="noti-body">
+            <span class="noti-title">Phòng 02 · Combo sắp hết</span>
+            <span class="noti-text">Combo 3 giờ, còn 15 phút</span>
+          </div>
+          <div class="noti-meta"><span class="noti-time">22:35</span><span class="unread-dot"></span></div>
+        </div>
+      </div>
+
+      <div class="scrim"></div>
+      <div class="sheet">
+        <div class="sheet-grabber"></div>
+        <div class="sheet-head">
+          <span class="sheet-title">Phòng 06</span>
+          <span class="sheet-sub">Phòng Couple · 2 khách</span>
+        </div>
+        <div class="sheet-alert"><b>Mức 2 · Bất thường</b><span>quá ngưỡng 40 phút</span></div>
+        <div class="facts">
+          <div class="fact"><span class="fact-label">Giờ vào</span><span class="fact-value">10:00</span></div>
+          <div class="fact"><span class="fact-label">Đã dùng</span><span class="fact-value fact-value-l2">12 giờ 40 phút</span></div>
+          <div class="fact"><span class="fact-label">Tạm tính</span><span class="fact-value">1,184,000</span></div>
+          <div class="fact"><span class="fact-label">Ngưỡng</span><span class="fact-value">12 giờ</span></div>
+        </div>
+        <div class="sheet-actions">
+          <div class="btn btn-secondary">Đóng</div>
+          <div class="btn btn-primary">Xem phòng</div>
+        </div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- 04 Cài đặt thông báo                                            -->
+  <!-- =============================================================== -->
+  <section class="artboard">
+    <div class="artboard-label">04 · Cài đặt thông báo</div>
+    <div class="screen" id="04-cai-dat-thong-bao">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <span class="status-time">22:42</span>
+        <span class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#1F2329"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#1F2329" opacity="0.4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#1F2329"/><rect x="24.5" y="4.5" width="1.5" height="4" rx="0.75" fill="#1F2329" opacity="0.4"/></svg>
+        </span>
+      </div>
+      <div class="app-header">
+        <span class="app-title">Cài đặt thông báo</span>
+      </div>
+      <div class="content">
+        <span class="section-label">GỬI TỚI ĐIỆN THOẠI NÀY</span>
+        <div class="settings-card">
+          <div class="setting-row">
+            <div class="setting-text">
+              <span class="setting-title">Kín phòng</span>
+              <span class="setting-desc">Khi tất cả phòng đều có khách</span>
+            </div>
+            <div class="switch switch-on"><div class="switch-knob"></div></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-text">
+              <span class="setting-title"><span class="tag tag-l1">Mức 1</span>Combo sắp hết</span>
+              <span class="setting-desc">Báo trước 15 phút khi combo kết thúc</span>
+            </div>
+            <div class="switch switch-on"><div class="switch-knob"></div></div>
+          </div>
+          <div class="setting-row setting-row-last">
+            <div class="setting-text">
+              <span class="setting-title"><span class="tag tag-l2">Mức 2</span>Bất thường</span>
+              <span class="setting-desc">Phòng dùng liên tục từ 12 giờ</span>
+            </div>
+            <div class="switch switch-on"><div class="switch-knob"></div></div>
+          </div>
+        </div>
+        <div class="info-box">Tắt ở đây chỉ dừng thông báo trên điện thoại. Cảnh báo vẫn hiện trên màn hình Phòng/Bàn. Ngưỡng thời gian chỉnh trên máy tính: Cài đặt &gt; Thông báo.</div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+  <!-- =============================================================== -->
+  <!-- 05 Cài đặt: đã tắt Kín phòng (trạng thái công tắc tắt)             -->
+  <!-- =============================================================== -->
+  <section class="artboard">
+    <div class="artboard-label">05 · Cài đặt: tắt Kín phòng</div>
+    <div class="screen" id="05-cai-dat-tat-kin-phong">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <span class="status-time">22:42</span>
+        <span class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#1F2329"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#1F2329" opacity="0.4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#1F2329"/><rect x="24.5" y="4.5" width="1.5" height="4" rx="0.75" fill="#1F2329" opacity="0.4"/></svg>
+        </span>
+      </div>
+      <div class="app-header">
+        <span class="app-title">Cài đặt thông báo</span>
+      </div>
+      <div class="content">
+        <span class="section-label">GỬI TỚI ĐIỆN THOẠI NÀY</span>
+        <div class="settings-card">
+          <div class="setting-row">
+            <div class="setting-text">
+              <span class="setting-title">Kín phòng</span>
+              <span class="setting-desc">Khi tất cả phòng đều có khách</span>
+            </div>
+            <div class="switch switch-off"><div class="switch-knob"></div></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-text">
+              <span class="setting-title"><span class="tag tag-l1">Mức 1</span>Combo sắp hết</span>
+              <span class="setting-desc">Báo trước 15 phút khi combo kết thúc</span>
+            </div>
+            <div class="switch switch-on"><div class="switch-knob"></div></div>
+          </div>
+          <div class="setting-row setting-row-last">
+            <div class="setting-text">
+              <span class="setting-title"><span class="tag tag-l2">Mức 2</span>Bất thường</span>
+              <span class="setting-desc">Phòng dùng liên tục từ 12 giờ</span>
+            </div>
+            <div class="switch switch-on"><div class="switch-knob"></div></div>
+          </div>
+        </div>
+        <div class="info-box">Tắt ở đây chỉ dừng thông báo trên điện thoại. Cảnh báo vẫn hiện trên màn hình Phòng/Bàn. Ngưỡng thời gian chỉnh trên máy tính: Cài đặt &gt; Thông báo.</div>
+      </div>
+      <div class="home-indicator"></div>
+    </div>
+  </section>
+
+
+  <!-- =============================================================== -->
+  <!-- 06 Mật độ phòng trên điện thoại (US-007), khung cuộn dài          -->
+  <!-- =============================================================== -->
+  <section class="artboard">
+    <div class="artboard-label">06 · Mật độ phòng (US-007)</div>
+    <div class="screen screen-long" id="06-mat-do-phong">
+      <div class="dynamic-island"></div>
+      <div class="status-bar">
+        <span class="status-time">22:43</span>
+        <span class="status-icons">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="#1F2329"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="27" height="13" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="#1F2329" opacity="0.4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="#1F2329"/><rect x="24.5" y="4.5" width="1.5" height="4" rx="0.75" fill="#1F2329" opacity="0.4"/></svg>
+        </span>
+      </div>
+      <div class="app-header"><span class="app-title">Mật độ phòng</span></div>
+      <div class="period">29/09 – 26/10/2026 · TB 4 tuần</div>
+      <div class="chips">
+        <span class="chip">7 ngày</span>
+        <span class="chip chip-active">4 tuần</span>
+        <span class="chip">Tháng này</span>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card"><span class="kpi-label">Phủ trung bình</span><span class="kpi-value">44%</span><span class="kpi-delta">+2%</span></div>
+        <div class="kpi-card"><span class="kpi-label">Cao điểm</span><span class="kpi-value">T7, 20h</span></div>
+        <div class="kpi-card"><span class="kpi-label">Vắng nhất</span><span class="kpi-value">T4, 10h</span></div>
+      </div>
+      <div class="today-box">Tỉ lệ phủ hôm nay: <b>52%</b> · So với hôm qua: <b>47%</b> <span class="today-delta">+5%</span></div>
+      <div class="m-card">
+        <div class="m-card-head">
+          <span class="m-card-title">Theo khung giờ</span>
+          <div class="segmented"><span class="segment segment-active">Giờ mở cửa</span><span class="segment">Cả ngày</span></div>
+        </div>
+        <div class="hm">
+<div class="hm-row"><span class="hm-day">T2</span><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#C2DBFF"></div></div>
+<div class="hm-row"><span class="hm-day">T3</span><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#C2DBFF"></div></div>
+<div class="hm-row"><span class="hm-day">T4</span><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div></div>
+<div class="hm-row"><span class="hm-day">T5</span><div class="hm-cell" style="background:#E3EEFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div></div>
+<div class="hm-row"><span class="hm-day">T6</span><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#C2DBFF"></div></div>
+<div class="hm-row"><span class="hm-day">T7</span><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell hm-cell-selected" style="background:#0045A8"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#C2DBFF"></div></div>
+<div class="hm-row"><span class="hm-day">CN</span><div class="hm-cell" style="background:#C2DBFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#94BFFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#0062E0"></div><div class="hm-cell" style="background:#0045A8"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#2A7DFB"></div><div class="hm-cell" style="background:#5C9DFF"></div><div class="hm-cell" style="background:#94BFFF"></div></div>
+<div class="hm-row"><span class="hm-day"></span><span class="hm-hour">10h</span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour">14h</span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour">18h</span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour">22h</span><span class="hm-hour"></span><span class="hm-hour"></span><span class="hm-hour"></span></div>
+        </div>
+        <div class="cell-info">
+          <span class="cell-info-title">Thứ Bảy, 20:00 – 21:00</span>
+          <span class="cell-info-text">100% phòng có khách · TB 10.0/10 phòng</span>
+        </div>
+        <div class="legend-row">Thấp <span class="legend-swatch" style="background:#F2F3F5"></span><span class="legend-swatch" style="background:#E3EEFF"></span><span class="legend-swatch" style="background:#C2DBFF"></span><span class="legend-swatch" style="background:#94BFFF"></span><span class="legend-swatch" style="background:#5C9DFF"></span><span class="legend-swatch" style="background:#2A7DFB"></span><span class="legend-swatch" style="background:#0062E0"></span><span class="legend-swatch" style="background:#0045A8"></span> Cao</div>
+      </div>
+      <div class="m-card">
+        <div class="m-card-head"><span class="m-card-title">Theo loại phòng</span></div>
+<div class="type-row"><div class="type-label"><span class="type-name">Phòng Big</span><span class="type-value">48%</span></div><div class="type-track"><div class="type-fill" style="width:47.7%"></div></div></div>
+<div class="type-row"><div class="type-label"><span class="type-name">Phòng Couple</span><span class="type-value">47%</span></div><div class="type-track"><div class="type-fill" style="width:47.0%"></div></div></div>
+<div class="type-row"><div class="type-label"><span class="type-name">Phòng Standard</span><span class="type-value">40%</span></div><div class="type-track"><div class="type-fill" style="width:40.2%"></div></div></div>
+<div class="type-row"><div class="type-label"><span class="type-name">Phòng VIP<span class="type-low">Thấp nhất</span></span><span class="type-value">31%</span></div><div class="type-track"><div class="type-fill" style="width:30.9%"></div></div></div>
+      </div>
+      <div class="footnote">Tính từ giờ nhận phòng đến giờ trả phòng</div>
+      <div class="tab-bar">
+        <div class="tab tab-active">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0070F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+          <span>Tổng quan</span>
+        </div>
+        <div class="tab">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <span>Phòng/Bàn</span>
+        </div>
+        <div class="tab">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div>
+          <span>Thông báo</span>
+        </div>
+        <div class="tab">
+          <div class="tab-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+          <span>Tài khoản</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

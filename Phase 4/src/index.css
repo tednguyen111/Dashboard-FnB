@@ -1,0 +1,769 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* KiotViet design tokens                                               */
+/* ------------------------------------------------------------------ */
+@theme {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --color-kv-blue: #0070f4;
+  --color-kv-blue-hover: #005fd1;
+  --color-kv-blue-50: #ebf3ff;
+  --color-kv-blue-100: #d6e7ff;
+
+  --color-ink: #1f2329;
+  --color-ink-2: #4e5969;
+  --color-ink-3: #86909c;
+  --color-line: #e5e6eb;
+  --color-line-soft: #f0f1f4;
+  --color-fill: #f2f3f5;
+  --color-canvas: #f5f7fa;
+
+  --color-kv-green: #00b14f;
+  --color-kv-orange: #ff8a00;
+  --color-kv-red: #f53f3f;
+
+  /* Alert level 1 (amber) */
+  --color-l1: #d46b08;
+  --color-l1-bg: #fff7e8;
+  --color-l1-line: #ffcf8b;
+  /* Alert level 2 (red) */
+  --color-l2: #cb2634;
+  --color-l2-bg: #fff1f0;
+  --color-l2-line: #ffa39e;
+
+  /* Heatmap sequential scale (KiotViet blue) */
+  --color-h0: #f2f3f5;
+  --color-h1: #e3eeff;
+  --color-h2: #c2dbff;
+  --color-h3: #94bfff;
+  --color-h4: #5c9dff;
+  --color-h5: #2a7dfb;
+  --color-h6: #0062e0;
+  --color-h7: #0045a8;
+}
+
+html,
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  background: #e8f0fc;
+}
+
+body {
+  background: linear-gradient(180deg, #e6efff 0, #eef3fa 220px, #f5f7fa 600px);
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+/* ------------------------------------------------------------------ */
+/* Header                                                               */
+/* ------------------------------------------------------------------ */
+.kv-nav {
+  background: linear-gradient(90deg, #1a7cff 0%, #0068f0 100%);
+  box-shadow: 0 2px 6px rgba(0, 104, 240, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.kv-nav-item {
+  position: relative;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 7px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+  transition: background 0.15s;
+}
+.kv-nav-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.kv-nav-item.is-active {
+  background: rgba(255, 255, 255, 0.22);
+}
+.kv-nav-item.is-active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transform: translateX(-50%);
+}
+
+.kv-outline-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid #b8d4ff;
+  background: #fff;
+  color: var(--color-kv-blue);
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.kv-outline-btn:hover {
+  background: var(--color-kv-blue-50);
+}
+.kv-icon-btn {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #b8d4ff;
+  background: #fff;
+  color: var(--color-kv-blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.kv-icon-btn:hover,
+.kv-icon-btn.is-open {
+  background: var(--color-kv-blue-50);
+}
+
+/* ------------------------------------------------------------------ */
+/* Page + cards                                                         */
+/* ------------------------------------------------------------------ */
+.kv-page {
+  background: rgba(247, 249, 252, 0.92);
+  border-radius: 20px 20px 0 0;
+  min-height: calc(100vh - 110px);
+}
+.kv-card {
+  background: #fff;
+  border: 1px solid #eceef2;
+  border-radius: 12px;
+}
+.kv-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* KPI cards: soft color wash in the top-right + short accent bar */
+.kv-kpi {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #eceef2;
+  border-radius: 12px;
+  padding: 18px 20px 16px 24px;
+}
+.kv-kpi::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22px;
+  width: 4px;
+  height: 22px;
+  border-radius: 0 3px 3px 0;
+  background: var(--kpi-accent);
+}
+.kv-kpi::after {
+  content: '';
+  position: absolute;
+  right: -60px;
+  top: -80px;
+  width: 260px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--kpi-wash);
+  filter: blur(30px);
+  pointer-events: none;
+}
+.kv-kpi > * {
+  position: relative;
+  z-index: 1;
+}
+.kpi-blue {
+  --kpi-accent: #0070f4;
+  --kpi-wash: rgba(0, 112, 244, 0.13);
+}
+.kpi-green {
+  --kpi-accent: #00b14f;
+  --kpi-wash: rgba(0, 177, 79, 0.13);
+}
+.kpi-orange {
+  --kpi-accent: #ff8a00;
+  --kpi-wash: rgba(255, 170, 0, 0.16);
+}
+
+/* Grey pill select, as used by "Hôm qua v" on KiotViet charts */
+.kv-select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 10px 0 12px;
+  border-radius: 8px;
+  background: var(--color-fill);
+  border: 1px solid transparent;
+  color: var(--color-ink);
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+.kv-select:hover {
+  background: #e8eaee;
+}
+.kv-select.is-open {
+  background: #fff;
+  border-color: var(--color-kv-blue);
+}
+
+.kv-menu {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #eceef2;
+  box-shadow: 0 8px 24px rgba(31, 35, 41, 0.12);
+  padding: 4px;
+}
+.kv-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+.kv-menu-item:hover {
+  background: var(--color-fill);
+}
+.kv-menu-item.is-selected {
+  color: var(--color-kv-blue);
+  font-weight: 600;
+}
+
+/* Underline tabs ("Theo giờ") */
+.kv-tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+.kv-tab {
+  position: relative;
+  padding: 0 0 10px;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-2);
+  font-size: 14px;
+}
+.kv-tab.is-active {
+  color: var(--color-kv-blue);
+  font-weight: 500;
+}
+.kv-tab.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--color-kv-blue);
+}
+
+/* Segmented control ("Theo nhóm | Theo loại") */
+.kv-seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 10px;
+  background: var(--color-fill);
+}
+.kv-seg button {
+  border: 0;
+  background: transparent;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-ink-2);
+  white-space: nowrap;
+}
+.kv-seg button.is-active {
+  background: var(--color-kv-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+.kv-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: background 0.15s, opacity 0.15s;
+}
+.kv-btn-primary {
+  background: var(--color-kv-blue);
+  color: #fff;
+}
+.kv-btn-primary:hover {
+  background: var(--color-kv-blue-hover);
+}
+.kv-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.kv-btn-ghost {
+  background: #fff;
+  border-color: var(--color-line);
+  color: var(--color-ink);
+}
+.kv-btn-ghost:hover {
+  background: var(--color-fill);
+}
+
+.kv-link {
+  color: var(--color-kv-blue);
+  font-weight: 500;
+  background: none;
+  border: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.kv-link:hover {
+  text-decoration: underline;
+}
+
+.kv-tag-new {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 6px;
+  background: #ffe8e8;
+  color: #f53f3f;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Text input with suffix unit */
+.kv-input {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.kv-input:focus-within {
+  border-color: var(--color-kv-blue);
+  box-shadow: 0 0 0 3px rgba(0, 112, 244, 0.12);
+}
+.kv-input.is-invalid {
+  border-color: var(--color-kv-red);
+}
+.kv-input.is-disabled {
+  background: var(--color-fill);
+  color: var(--color-ink-3);
+}
+.kv-input input {
+  width: 64px;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  padding: 0 10px;
+  font: inherit;
+  font-weight: 600;
+  text-align: right;
+  background: transparent;
+  color: inherit;
+}
+.kv-input span {
+  padding: 0 12px 0 2px;
+  color: var(--color-ink-3);
+}
+
+/* Toggle */
+.kv-switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 0;
+  background: #c9cdd4;
+  transition: background 0.2s;
+}
+.kv-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+.kv-switch[aria-checked='true'] {
+  background: var(--color-kv-blue);
+}
+.kv-switch[aria-checked='true']::after {
+  transform: translateX(18px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Heatmap                                                              */
+/* ------------------------------------------------------------------ */
+.hm-grid {
+  display: grid;
+  grid-template-columns: var(--hm-label, 32px) repeat(24, minmax(0, 1fr));
+  gap: var(--hm-gap, 3px);
+}
+.hm-cell {
+  height: var(--hm-h, 18px);
+  border-radius: 3px;
+  transition: box-shadow 0.1s;
+}
+.hm-cell.is-interactive {
+  cursor: pointer;
+}
+.hm-cell.is-interactive:hover {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--color-ink);
+  position: relative;
+  z-index: 2;
+}
+.hm-cell.is-selected {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--color-kv-orange);
+  position: relative;
+  z-index: 3;
+}
+.hm-tip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  background: #1f2329;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, calc(-100% - 8px));
+}
+
+/* ------------------------------------------------------------------ */
+/* Room cards                                                           */
+/* ------------------------------------------------------------------ */
+.room-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid #eceef2;
+  background: #fff;
+  overflow: hidden;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.room-card:hover {
+  box-shadow: 0 4px 14px rgba(31, 35, 41, 0.07);
+}
+.room-card.is-busy {
+  border-color: #b8d4ff;
+}
+.room-card.is-l1 {
+  border-color: var(--color-l1-line);
+  box-shadow: 0 0 0 1px var(--color-l1-line);
+}
+.room-card.is-l2 {
+  border-color: var(--color-l2-line);
+  box-shadow: 0 0 0 1px var(--color-l2-line);
+}
+.room-card.is-flash {
+  animation: flash 1.2s ease-out;
+}
+@keyframes flash {
+  0% {
+    box-shadow: 0 0 0 4px rgba(0, 112, 244, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 1px transparent;
+  }
+}
+.l2-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-l2);
+  animation: beat 1.6s ease-in-out infinite;
+}
+@keyframes beat {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(203, 38, 52, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(203, 38, 52, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .l2-dot,
+  .room-card.is-flash {
+    animation: none;
+  }
+}
+
+/* Thin scrollbars for horizontal overflow areas */
+.thin-scroll {
+  scrollbar-width: thin;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+}
+
+/* ------------------------------------------------------------------ */
+/* Cashier (Thu ngân) room map                                          */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .pos-tile {
+    --tbl: #a9b8cc;
+    --chair: #c9d3e0;
+    --board: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 42px 10px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--color-ink);
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .pos-tile:hover {
+    background: #f2f6fc;
+  }
+  .pos-tile.is-busy {
+    --tbl: #0062e0;
+    --chair: #2a7dfb;
+    --board: transparent;
+    background: #cfe4ff;
+  }
+  .pos-tile.is-l1 {
+    --tbl: #d46b08;
+    --chair: #fa8c16;
+    --board: transparent;
+    background: #ffe7c2;
+  }
+  .pos-tile.is-l2 {
+    --tbl: #cb2634;
+    --chair: #f0646f;
+    --board: transparent;
+    background: #ffdcdc;
+  }
+  .pos-tile.is-selected {
+    box-shadow: inset 0 0 0 2px var(--color-kv-blue);
+  }
+  .pos-tile.is-flash {
+    animation: flash 1.2s ease-out;
+  }
+
+  .pos-table {
+    position: relative;
+    width: 100%;
+    max-width: 136px;
+    aspect-ratio: 136 / 66;
+  }
+  .pos-chairs {
+    position: absolute;
+    display: flex;
+    gap: 4px;
+  }
+  .pos-chairs span {
+    flex: 1;
+    border-radius: 2px;
+    background: var(--chair);
+  }
+  .pos-chairs.top,
+  .pos-chairs.bottom {
+    left: 16%;
+    right: 16%;
+    height: 4px;
+  }
+  .pos-chairs.top {
+    top: -7px;
+  }
+  .pos-chairs.bottom {
+    bottom: -7px;
+  }
+  .pos-chairs.left,
+  .pos-chairs.right {
+    top: 26%;
+    bottom: 26%;
+    width: 4px;
+  }
+  .pos-chairs.left {
+    left: -7px;
+  }
+  .pos-chairs.right {
+    right: -7px;
+  }
+  .pos-board {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--tbl);
+    border-radius: 12px;
+    background: var(--board);
+    padding: 5px 7px;
+    font-size: 12px;
+    line-height: 1.35;
+    text-align: left;
+  }
+
+  .pos-badge {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 20px;
+    padding: 0 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .pos-badge.l1 {
+    background: #e07b00;
+  }
+  .pos-badge.l2 {
+    background: #cb2634;
+  }
+  .pos-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    animation: beat-w 1.6s ease-in-out infinite;
+  }
+  @keyframes beat-w {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  .kv-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 14px;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+  .kv-radio::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid #c9cdd4;
+    box-sizing: border-box;
+    background: #fff;
+  }
+  .kv-radio.is-active::before {
+    border: 5px solid var(--color-kv-blue);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pos-badge .dot,
+  .pos-tile.is-flash {
+    animation: none;
+  }
+}
+
+/* Prototype marker: small dot on tabs that contain the new features */
+@layer components {
+  .new-dot {
+    position: absolute;
+    top: 3px;
+    right: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ffc53d;
+    box-shadow: 0 0 0 2px #0f72fa;
+    pointer-events: none;
+  }
+  .new-dot.on-white {
+    top: -1px;
+    right: -1px;
+    width: 9px;
+    height: 9px;
+    background: #faad14;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .new-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: new-ping 2.4s ease-out infinite;
+  }
+  @keyframes new-ping {
+    0% { transform: scale(1); opacity: 0.7; }
+    70%, 100% { transform: scale(2.4); opacity: 0; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .new-dot::after { animation: none; }
+}

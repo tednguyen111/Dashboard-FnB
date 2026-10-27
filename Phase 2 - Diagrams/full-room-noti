@@ -1,0 +1,72 @@
+<mxGraphModel dx="1077" dy="685" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1200" pageHeight="1600" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#172B4D;" value="Full Room Notification" vertex="1">
+      <mxGeometry height="36" width="1100" x="40" y="10" as="geometry" />
+    </mxCell>
+    <mxCell id="lane_staff" parent="1" style="swimlane;html=1;startSize=140;horizontal=0;fillColor=#E8F5E9;swimlaneFillColor=#FFFFFF;strokeColor=#82B366;fontStyle=1;fontSize=13;rounded=1;collapsible=0;" value="NHÂN VIÊN" vertex="1">
+      <mxGeometry height="160" width="852" x="40" y="56" as="geometry" />
+    </mxCell>
+    <mxCell id="s_gw" parent="lane_staff" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="Toàn bộ&#xa;phòng kín?" vertex="1">
+      <mxGeometry height="80" width="100" x="190" y="31" as="geometry" />
+    </mxCell>
+    <mxCell id="s_no" parent="lane_staff" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" value="Vận hành&#xa;bình thường" vertex="1">
+      <mxGeometry height="60" width="130" x="393" y="37" as="geometry" />
+    </mxCell>
+    <mxCell id="e_s2" edge="1" parent="lane_staff" source="s_gw" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeColor=#666;strokeWidth=1.5;" target="s_no" value="Không">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="lane_sys" parent="1" style="swimlane;html=1;startSize=140;horizontal=0;fillColor=#DDEBFF;swimlaneFillColor=#F7FAFF;strokeColor=#6C8EBF;fontStyle=1;fontSize=13;rounded=1;collapsible=0;" value="HỆ THỐNG" vertex="1">
+      <mxGeometry height="160" width="852" x="40" y="216" as="geometry" />
+    </mxCell>
+    <mxCell id="VpJFkXyzblnbljXBjx0--68" edge="1" parent="lane_sys" source="sys_check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;defaultLabelBackgroundColor=page;startSize=8;endSize=8;elbow=vertical;" target="sys_no">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="VpJFkXyzblnbljXBjx0--70" connectable="0" parent="VpJFkXyzblnbljXBjx0--68" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;fontSize=12;defaultLabelBackgroundColor=page;" value="Không" vertex="1">
+      <mxGeometry relative="1" x="-0.1979" y="1" as="geometry">
+        <mxPoint x="-12" y="-3" as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="VpJFkXyzblnbljXBjx0--69" edge="1" parent="lane_sys" source="sys_check" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;defaultLabelBackgroundColor=page;startSize=8;endSize=8;" target="sys_send">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="VpJFkXyzblnbljXBjx0--71" connectable="0" parent="VpJFkXyzblnbljXBjx0--69" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;fontSize=12;defaultLabelBackgroundColor=page;" value="Có" vertex="1">
+      <mxGeometry relative="1" x="-0.3234" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="sys_check" parent="lane_sys" style="rhombus;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" value="Toggle&#xa;kín phòng&#xa;bật?" vertex="1">
+      <mxGeometry height="85" width="100" x="190" y="40" as="geometry" />
+    </mxCell>
+    <mxCell id="sys_send" parent="lane_sys" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Gửi push notification&#xa;trong vòng 60 giây" vertex="1">
+      <mxGeometry height="60" width="160" x="370" y="93" as="geometry" />
+    </mxCell>
+    <mxCell id="sys_no" parent="lane_sys" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666;fontSize=11;" value="Chỉ cập nhật&#xa;dashboard" vertex="1">
+      <mxGeometry height="40" width="160" x="370" y="12" as="geometry" />
+    </mxCell>
+    <mxCell id="lane_mgr" parent="1" style="swimlane;html=1;startSize=140;horizontal=0;fillColor=#FFF0E1;swimlaneFillColor=#FFFAF5;strokeColor=#E69138;fontStyle=1;fontSize=13;rounded=1;collapsible=0;" value="MANAGER / OWNER" vertex="1">
+      <mxGeometry height="160" width="852" x="40" y="376" as="geometry" />
+    </mxCell>
+    <mxCell id="mgr_recv" parent="lane_mgr" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6A6;strokeColor=#D79B00;fontSize=11;" value="Nhận thông báo&lt;br&gt;Tất cả phòng đã kín" vertex="1">
+      <mxGeometry height="60" width="160" x="370" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="mgr_act" parent="lane_mgr" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#E69138;fontSize=11;" value="Ngừng nhận booking&lt;br&gt;Thông báo khách" vertex="1">
+      <mxGeometry height="60" width="160" x="600" y="50" as="geometry" />
+    </mxCell>
+    <mxCell id="e_mgr1" edge="1" parent="lane_mgr" source="mgr_recv" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=1;strokeColor=#EF6C00;strokeWidth=1.5;" target="mgr_act">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="cx1" edge="1" parent="1" source="s_gw" style="edgeStyle=orthogonalEdgeStyle;dashed=1;dashPattern=8 4;endArrow=open;endFill=0;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=10;" target="sys_check" value="Có - Trigger thông báo">
+      <mxGeometry relative="1" x="-0.327" as="geometry">
+        <mxPoint as="offset" />
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="cx2" edge="1" parent="1" source="sys_send" style="edgeStyle=orthogonalEdgeStyle;dashed=1;dashPattern=8 4;endArrow=open;endFill=0;strokeColor=#E69138;strokeWidth=1.5;fontColor=#E69138;fontSize=10;" target="mgr_recv" value="Push notification">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+    <mxCell id="legend" parent="1" style="text;html=1;strokeColor=#DEE2E6;fillColor=#F8F9FA;rounded=1;fontSize=10;fontColor=#495057;align=left;verticalAlign=middle;" value="CHÚ GIẢI:  → Mũi tên liền = Luồng xử lý  |  ⤍ Nét đứt = Trigger / Push notification giữa các lane" vertex="1">
+      <mxGeometry height="36" width="847" x="40" y="556" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>

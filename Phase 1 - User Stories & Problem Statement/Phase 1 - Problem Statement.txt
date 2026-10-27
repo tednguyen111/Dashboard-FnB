@@ -1,0 +1,173 @@
+================================================================================
+PHASE 1 -- PROBLEM STATEMENT
+Project: Theo Dõi Độ Phủ Phòng (Room Occupancy Analytics)
+Phiên bản: 0.3 -- DRAFT (đang review)
+Tác giả BA: Nguyễn Tuấn Đạt
+================================================================================
+1. BỐI CẢNH & NGUỒN GỐC VẤN ĐỀ
+================================================================================
+
+Man Mát Station là một cơ sở kinh doanh music box tại Hà Nội với 10 phòng
+và khoảng 700–1.000 hóa đơn mỗi tháng. Cơ sở đang sử dụng KiotViet để
+quản lý hóa đơn và theo dõi vận hành hàng ngày.
+
+Trong quá trình phân tích dữ liệu vận hành, BA nhận ra một mâu thuẫn:
+
+  Dashboard KiotViet hiển thị khung 8h–10h tối gần như KHÔNG có hóa đơn.
+  Nhưng thực tế, đây là khung giờ phòng ĐÔNG NHẤT — khách vào từ 7h,
+  sử dụng phòng liên tục đến 10h, và chỉ thanh toán lúc ra.
+
+Nguyên nhân gốc: Các phần mềm quản lý F&B hiện tại đo "thời điểm tạo hóa
+đơn" thay vì "thời gian phòng được sử dụng thực tế." Với mô hình time-based
+(music box, karaoke, billiard, spa), hai con số này lệch nhau hoàn toàn.
+
+================================================================================
+2. PROBLEM STATEMENT (theo Design Thinking -- bước Define)
+================================================================================
+
+  Chủ quán và quản lý của các cơ sở F&B mô hình phòng (music box, karaoke)
+  cần biết khung giờ nào phòng thực sự được sử dụng nhiều/ít, thời gian
+  trung bình khách sử dụng là bao lâu, và nhận thông báo kịp thời khi kín
+  phòng — vì dữ liệu hóa đơn hiện tại không phản ánh đúng thực trạng vận
+  hành, khiến việc ra quyết định marketing/khuyến mãi phụ thuộc vào cảm tính
+  hoặc đòi hỏi phải có người biết phân tích dữ liệu mới khai thác được.
+
+================================================================================
+3. USER PERSONAS
+================================================================================
+
+-- PERSONA 1: Chủ quán / Cổ đông (Owner) --
+
+Vai trò  : Đầu tư, ra quyết định chiến lược kinh doanh
+Thiết bị : Điện thoại (xem từ xa là chính), thỉnh thoảng xem trên máy tính
+Tần suất : Xem dashboard vài lần/tuần, không cần theo dõi từng phút
+
+Nhu cầu:
+  - Biết khung giờ nào phòng thực sự đông/vắng trong ngày và trong tuần
+  - Biết thời gian trung bình khách sử dụng phòng theo từng loại phòng
+  - Dựa vào dữ liệu để thiết kế gói dịch vụ và chương trình khuyến mãi
+    phù hợp (ví dụ: gói 2h vs 3h, giảm giá khung giờ thực sự vắng)
+  - Có thể xuất dữ liệu để báo cáo cho các cổ đông khác
+
+Pain Points:
+  - KiotViet có doanh thu theo giờ nhưng đây là giờ tạo hóa đơn, không phải
+    giờ sử dụng thực tế → dễ đưa ra nhận định sai về khung giờ đông/vắng
+  - KiotViet chưa có heatmap tỉ lệ phủ phòng theo ngày/giờ
+  - Muốn xem heatmap phải: xuất Excel → import → tự vẽ heatmap thủ công → tốn thời
+    gian, kết quả lại khó đọc
+  - Không biết khách ngồi bao lâu → không thiết kế được gói KM hợp lý
+  - Mỗi lần muốn biết tình hình phải hỏi quản lý/nhân viên → nhận được câu
+    trả lời cảm tính, không có số liệu cụ thể
+  - Việc khai thác insight từ data hiện tại đòi hỏi phải có người biết phân
+    tích dữ liệu (DA/kế toán) — điều mà hầu hết quán nhỏ không có
+
+Quote (từ thực tế):
+  "Mình thấy 8–10h không có hóa đơn mới nào, tưởng là vắng.
+   Nhưng thực ra đó là lúc kín phòng nhất — khách vào từ 7h, đến 10h mới ra."
+
+-- PERSONA 2: Quản lý ca (Manager) --
+
+Vai trò  : Vận hành ca trực tiếp tại quán, phản hồi booking online
+Thiết bị : Điện thoại cá nhân + máy tính quầy
+Tần suất : Theo dõi liên tục trong ca làm việc
+
+Nhu cầu:
+  - Nhận thông báo ngay khi toàn bộ phòng đã có khách để xử lý kịp thời
+    (ngừng nhận booking online, thông báo khách walk-in)
+  - Có thể bật/tắt thông báo này theo nhu cầu
+
+Pain Points:
+  - KiotViet đã hiển thị trạng thái phòng (10/10 kín) — nhưng chỉ khi chủ
+    động mở app lên xem, không có thông báo chủ động
+  - Khi bận phục vụ khách, hoặc theo dõi nhiều cơ sở không để ý app 
+    → nhân viên trực page vẫn nhận booking 
+    → khách đến mà không có phòng 
+    → ảnh hưởng trải nghiệm và uy tín
+
+Phân quyền nhận thông báo: Manager trở lên. Nhân viên không nhận.
+
+================================================================================
+4. ROOT CAUSE ANALYSIS
+================================================================================
+
+Vấn đề bề mặt:
+  "Không biết khung giờ nào phòng thực sự được sử dụng nhiều/ít"
+
+Root Cause:
+  Phần mềm F&B hiện tại đo "transaction time" (thời điểm tạo/đóng hóa đơn)
+  thay vì "occupancy time" (khoảng thời gian phòng thực sự được sử dụng).
+
+  Ví dụ thực tế tại Man Mát:
+    7h00  → Khách vào, tạo hóa đơn   → Hệ thống ghi nhận
+    7h–10h → Khách trong phòng        → Không có giao dịch nào
+    10h00 → Khách ra, đóng hóa đơn   → Hệ thống ghi nhận
+    ⟹ Dashboard hóa đơn thấy 8h–9h "trống" = SAI hoàn toàn
+
+  Hệ quả:
+    - Chủ quán ra quyết định marketing dựa trên dữ liệu sai
+    - Không biết thời gian trung bình sử dụng thực tế
+    - Phải tốn công làm thủ công hoặc nhờ người có kỹ năng DA mới ra được insight
+
+================================================================================
+5. PHẠM VI GIẢI PHÁP (MVP SCOPE)
+================================================================================
+
+Tên module: Room Occupancy Analytics
+
+Gồm 3 tính năng trong cùng 1 module:
+
+  [1] OCCUPANCY HEATMAP
+      Hiển thị % phòng có khách theo từng khung giờ trong ngày/tuần
+      Dựa trên dữ liệu check-in / check-out thực tế
+      Cho phép xem lịch sử theo ngày / tuần / tháng
+      Có thể xuất dữ liệu (CSV)
+
+  [2] AVERAGE USAGE TIME
+      Tính thời gian trung bình khách sử dụng phòng
+      Phân chia theo loại phòng (ví dụ: phòng Couple, phòng Big)
+      Hiển thị theo ngày / tuần để xem xu hướng
+
+  [3] FULL ROOM NOTIFICATION
+      Gửi thông báo đẩy (push notification) khi toàn bộ phòng đã có khách
+      Phân quyền nhận: Manager trở lên, nhân viên không nhận
+      Người dùng có thể tự bật/tắt trong cài đặt cá nhân
+
+Ngoài phạm vi MVP (xem xét sau):
+  - Cảnh báo sắp full (còn X phòng trống)
+  - Dự báo lượng khách bằng AI
+
+================================================================================
+6. GAP ANALYSIS -- KiotViet hiện tại vs Đề xuất
+================================================================================
+
+  Tính năng                    | KiotViet hiện có       | Đề xuất
+  -----------------------------|------------------------|-------------------------
+  Trạng thái phòng real-time   | Có (X/10 phòng kín)    | Giữ nguyên
+  Heatmap phủ phòng theo giờ   | Không có               | Có -- trong app
+  Thời gian TB sử dụng phòng   | Không có               | Có -- theo loại phòng
+  Lịch sử phủ phòng            | Phải xuất Excel thủ công| Có -- xem trực tiếp
+  Alert khi full phòng         | Không có               | Có -- push notification
+  Xuất dữ liệu phòng           | Phức tạp, khó đọc      | Đơn giản, có sẵn
+
+================================================================================
+7. GIÁ TRỊ MANG LẠI
+================================================================================
+
+Tính năng này giúp chủ quán nhỏ tự khai thác insight từ dữ liệu vận hành
+mà không cần có DA hay kế toán biết phân tích:
+
+  - Xác định được khung giờ thực sự vắng để chạy KM đúng chỗ
+  - Biết thời gian TB khách sử dụng để thiết kế gói dịch vụ phù hợp
+  - Nhận alert kịp thời để tránh nhận booking khi đã full
+  - Giảm phụ thuộc vào thông tin cảm tính từ nhân viên
+
+================================================================================
+LỊCH SỬ THAY ĐỔI
+================================================================================
+
+v0.1 | Draft đầu tiên                                | Nguyễn Tuấn Đạt | 24/10/2026
+v0.2 | Cập nhật pain points, thêm Gap Analysis       | Nguyễn Tuấn Đạt | 24/10/2026
+v0.3 | Tiếng Việt có dấu, tách 2 Persona, bỏ P3      | Nguyễn Tuấn Đạt | 24/10/2026
+     | Mở rộng scope: thêm Average Usage Time        |                 |
+     | Làm rõ phân quyền notification                |                 |
+     | Cập nhật số liệu: 700-1000 HĐ/tháng           |                 |

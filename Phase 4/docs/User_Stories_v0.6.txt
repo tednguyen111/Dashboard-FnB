@@ -1,0 +1,218 @@
+================================================================================
+PHASE 1 -- USER STORIES
+Project : Room Occupancy Analytics
+Phiên bản: 0.6 -- DRAFT (khớp với prototype)
+Tác giả BA: Nguyễn Tuấn Đạt
+================================================================================
+
+VAI TRÒ
+  Quản lý   : Chủ quán và Quản lý ca. Thấy mọi cảnh báo, nhận thông báo đẩy,
+              chỉnh được cài đặt.
+  Nhân viên : Thu ngân, phục vụ. Chỉ thấy cảnh báo Mức 1 trên màn hình Phòng/Bàn,
+              không nhận thông báo đẩy, không vào được cài đặt.
+
+NGUYÊN TẮC CHUNG
+  - Thời gian sử dụng phòng tính từ lúc NHẬN PHÒNG đến lúc TRẢ PHÒNG,
+    không theo giờ tạo hóa đơn.
+  - Dữ liệu lịch sử lưu 90 ngày.
+
+STORY MAP
+  EPIC 1  ROT-EP-01  Phân tích độ phủ phòng
+          FE-01  Widget tỷ lệ phủ phòng        US-001  Must
+          FE-02  Heatmap mật độ sử dụng phòng  US-002  Must
+  EPIC 2  ROT-EP-02  Thời gian sử dụng
+          FE-01  Widget thời gian trung bình    US-003  Must
+  EPIC 3  ROT-EP-03  Thông báo & cảnh báo
+          FE-01  Thông báo kín phòng           US-004  Should
+          FE-02  Cảnh báo phòng Mức 1 & Mức 2   US-005  Should
+          FE-03  Cài đặt thông báo & ngưỡng     US-006  Should
+
+================================================================================
+EPIC 1 -- PHÂN TÍCH ĐỘ PHỦ PHÒNG
+================================================================================
+
+US-001 | Widget tỷ lệ phủ phòng                         Must | ROT-EP-01-FE-01
+--------------------------------------------------------------------------------
+Là Chủ quán, tôi muốn thấy ngay trên Tổng quan bao nhiêu % phòng đang có khách,
+để nắm tình hình mà không phải mở màn hình khác.
+
+AC-1  Tổng quan có thẻ "Tỷ lệ phủ phòng" gồm: % phủ (80%), số phòng có khách
+      / tổng (8/10), "Đơn đang phục vụ (8)" kèm tổng tạm tính, "Phòng còn trống".
+AC-2  Số liệu tự cập nhật khi có nhận phòng hoặc trả phòng, không cần tải lại.
+AC-3  Bấm vào thẻ thì mở màn hình Phòng/Bàn.
+AC-4  Chưa có phòng nào có khách thì thẻ hiện "0%" và "0/N phòng", không để trống.
+
+BR-001  % phủ = số phòng có khách / tổng số phòng (N) x 100.
+BR-002  Phòng "có khách" = đã nhận phòng và chưa trả phòng.
+
+US-002 | Heatmap mật độ sử dụng phòng                   Must | ROT-EP-01-FE-02
+--------------------------------------------------------------------------------
+Là Chủ quán, tôi muốn nhìn một lượt thấy khung giờ nào trong tuần đông hay vắng,
+để lên kế hoạch khuyến mãi và nhân sự.
+
+AC-1  Tổng quan có widget "Mật độ sử dụng phòng" (nhãn "Mới"). Mặc định chỉ hiện
+      một dòng 3 số liệu: Tỷ lệ phủ trung bình, Khung giờ cao điểm,
+      Khung giờ vắng nhất. Heatmap đang thu gọn.
+AC-2  Bấm vào bất kỳ đâu trên dòng số liệu thì heatmap mở ra ngay trong thẻ;
+      bấm lần nữa để thu gọn.
+AC-3  Heatmap là bảng 7 x 24 (T2-CN x 0h-23h). Ô chỉ có màu, không có số.
+      Rê chuột vào ô hiện: thứ, khung giờ, % phủ, số phòng có khách trung bình.
+AC-4  Có chú thích màu từ "Thấp" đến "Cao".
+AC-5  Chọn khoảng thời gian: 7 ngày qua, 4 tuần qua, Tháng này, Tháng trước,
+      3 tháng qua, Tùy chọn. "Tùy chọn" cho nhập Từ ngày - Đến ngày.
+      Heatmap và 3 số liệu tính lại theo khoảng đã chọn.
+AC-6  "Tùy chọn" báo lỗi và không cho áp dụng khi:
+      - Ngày bắt đầu sau ngày kết thúc
+      - Khoảng ngắn hơn 7 ngày ("Chọn ít nhất 7 ngày")
+      - Ngoài 90 ngày gần nhất
+AC-7  Bấm "Xem chi tiết theo loại phòng" thì mở trang chi tiết, gồm:
+      - Lọc theo loại phòng và khoảng thời gian, nút Xuất file
+      - 4 số liệu: tỷ lệ phủ TB, cao điểm, vắng nhất, ngày đông khách nhất
+      - Heatmap lớn có ghi % trong chú thích màu
+      - Bấm một ô: hiện % phủ, số phòng TB, chênh lệch so với TB cùng giờ,
+        biểu đồ cả ngày hôm đó và % theo từng loại phòng
+AC-8  Ô chưa có dữ liệu hiển thị khác ô 0%, kèm ghi chú
+      "Dữ liệu từ [ngày bắt đầu] - đang tích lũy". (Chưa có trong prototype)
+
+BR-003  Màu mỗi ô = % phủ trung bình của cùng thứ và khung giờ trong khoảng đã chọn.
+BR-004  TB, cao điểm, vắng nhất tính trong giờ mở cửa 10:00 - 02:00.
+BR-005  Mặc định 4 tuần qua.
+
+================================================================================
+EPIC 2 -- THỜI GIAN SỬ DỤNG
+================================================================================
+
+US-003 | Widget thời gian sử dụng trung bình            Must | ROT-EP-02-FE-01
+--------------------------------------------------------------------------------
+Là Chủ quán, tôi muốn biết khách thường dùng mỗi loại phòng bao lâu,
+để thiết kế gói combo và khung giá phù hợp.
+
+AC-1  Tổng quan có widget "Thời gian sử dụng trung bình" (nhãn "Mới") gồm:
+      - Trung bình toàn quán (vd 2 giờ 17 phút), chênh lệch so với kỳ trước,
+        tổng số lượt
+      - Mỗi loại phòng: thời gian TB, số lượt, thanh ngang
+      - Vạch nét đứt đánh dấu trung bình toàn quán
+AC-2  Chọn khoảng thời gian: Hôm nay, Hôm qua, 7 ngày qua, 30 ngày qua,
+      Tháng này, Tùy chọn.
+AC-3  Loại phòng có dưới 5 lượt hiện nhãn "Ít dữ liệu".
+AC-4  Biểu tượng (i) giải thích cách tính và các lượt bị loại.
+
+BR-006  Thời gian sử dụng = giờ trả phòng - giờ nhận phòng.
+BR-007  Chỉ tính lượt từ 10 phút trở lên và không bị cảnh báo Mức 2.
+BR-008  TB toàn quán tính theo số lượt của từng loại phòng.
+BR-009  Kỳ so sánh = khoảng liền trước, cùng độ dài. Mặc định 7 ngày qua.
+
+================================================================================
+EPIC 3 -- THÔNG BÁO & CẢNH BÁO
+================================================================================
+
+US-004 | Thông báo kín phòng                          Should | ROT-EP-03-FE-01
+--------------------------------------------------------------------------------
+Là Quản lý, tôi muốn được báo ngay khi tất cả phòng đều có khách,
+để ngừng nhận khách mới hoặc sắp xếp chờ mà không phải mở app kiểm tra.
+
+AC-1  Khi phòng cuối cùng được nhận, Quản lý nhận thông báo đẩy trong 60 giây:
+      "Kín phòng · [Tên quán] - Tất cả [N] phòng đã có khách."
+AC-2  Thông báo hiện trên màn hình khóa khi không mở app, và lưu trong mục
+      Thông báo của app.
+AC-3  Không gửi lại cho đến khi có phòng trống rồi kín lại.
+AC-4  Nhân viên không nhận thông báo này.
+
+US-005 | Cảnh báo phòng Mức 1 & Mức 2                 Should | ROT-EP-03-FE-02
+--------------------------------------------------------------------------------
+Là Quản lý, tôi muốn biết ngay phòng nào sắp hết combo hoặc dùng lâu bất thường,
+để báo khách kịp thời và phát hiện phòng bị bỏ quên chưa trả.
+
+Trên màn hình Phòng/Bàn (sơ đồ phòng kiểu Thu ngân):
+AC-1  Mức 1 - Combo sắp hết: phòng đang dùng combo còn <= X phút (mặc định 15):
+      ô phòng màu cam, nhãn "Còn Xp" (quá giờ thì "Quá Xp"),
+      thời gian đã dùng màu cam. Mọi vai trò đều thấy.
+AC-2  Mức 2 - Bất thường: phòng dùng liên tục >= N giờ (mặc định 12):
+      ô phòng màu đỏ, nhãn "Bất thường" có chấm nhấp nháy.
+      Chỉ Quản lý thấy. Nhân viên thấy ô như phòng có khách bình thường.
+AC-3  Phòng đạt cả 2 mức thì chỉ hiện Mức 2.
+AC-4  Góc sơ đồ có nút tóm tắt "X bất thường | Y sắp hết combo";
+      bấm để chỉ hiện các phòng có cảnh báo.
+AC-5  Bấm một phòng: khung bên phải hiện cảnh báo trên 1 dòng, giờ vào,
+      thời gian đã dùng, số khách, tiến độ combo, danh sách món, tổng tiền.
+AC-6  Chuông trên thanh đầu trang hiện số cảnh báo; bấm vào một cảnh báo thì mở
+      Phòng/Bàn và chọn đúng phòng đó.
+AC-7  Phòng trả phòng thì cảnh báo biến mất.
+
+Trên điện thoại của Quản lý:
+AC-8  Khi phòng vừa chạm mức, gửi 1 thông báo đẩy (nếu đang bật):
+      Mức 1: "Phòng 02 · Combo sắp hết - Combo 3 giờ, còn 15 phút."
+      Mức 2: "Phòng 06 · Bất thường - Đã dùng 12 giờ 40 phút (ngưỡng 12 giờ).
+             Kiểm tra ngay."
+AC-9  Mỗi phòng chỉ nhận 1 thông báo cho mỗi mức trong một lượt sử dụng.
+      Cảnh báo trên Phòng/Bàn vẫn hiện liên tục.
+AC-10 Bấm thông báo trong app thì mở bảng tóm tắt phòng, có nút "Xem phòng".
+
+US-006 | Cài đặt thông báo & ngưỡng cảnh báo          Should | ROT-EP-03-FE-03
+--------------------------------------------------------------------------------
+Là Quản lý, tôi muốn tự chỉnh khi nào cảnh báo và những thông báo tôi nhận,
+để hệ thống phù hợp với cách vận hành của quán.
+
+Trên máy tính, Cài đặt > Thông báo:
+AC-1  "Thông báo kín phòng": bật/tắt (mặc định bật).
+AC-2  Mức 1 - Combo sắp hết (không bắt buộc):
+      - Bật/tắt. Tắt thì không có cảnh báo và không gửi thông báo Mức 1.
+      - "Báo trước khi combo kết thúc": 1-120 phút, mặc định 15.
+      - Ai nhìn thấy: Tất cả nhân viên.
+      - "Gửi thông báo tới ứng dụng": bật/tắt, mặc định bật.
+AC-3  Mức 2 - Thời gian sử dụng bất thường:
+      - Bật/tắt.
+      - Ngưỡng: 1-48 giờ, mặc định 12, có "Khôi phục mặc định".
+      - Ai nhìn thấy: Chỉ quản lý.
+      - "Gửi thông báo tới ứng dụng": bật/tắt, mặc định bật.
+AC-4  Nhập sai thì báo "Nhập số phút từ 1 đến 120" hoặc
+      "Nhập số giờ từ 1 đến 48", và không cho lưu.
+AC-5  Nút "Lưu" chỉ bật khi có thay đổi hợp lệ; có "Hủy thay đổi".
+      Lưu xong hiện "Đã lưu cài đặt".
+AC-6  Lưu xong áp dụng ngay cho cả các phòng đang dùng. Trước khi lưu, trang
+      cho xem trước số phòng sẽ ở Mức 1 / Mức 2.
+AC-7  Nhân viên không có nút cài đặt ở Phòng/Bàn; nếu mở trang cài đặt thì thấy
+      "Chỉ tài khoản Quản lý mới thay đổi được cài đặt thông báo."
+
+Trên điện thoại, Cài đặt thông báo:
+AC-8  3 công tắc cá nhân: Kín phòng, Mức 1, Mức 2 (mặc định đều bật).
+      Tắt chỉ dừng thông báo trên điện thoại đó; cảnh báo trên Phòng/Bàn vẫn hiện.
+
+BR-010  Ngưỡng và "Gửi thông báo tới ứng dụng" là cài đặt của cửa hàng.
+        Công tắc trên điện thoại là cài đặt cá nhân.
+        Thông báo chỉ gửi khi cả hai đều bật.
+
+================================================================================
+MAPPING US -> PROTOTYPE
+================================================================================
+  US-001  Tổng quan, thẻ "Tỷ lệ phủ phòng"                  #/tong-quan
+  US-002  Tổng quan, widget "Mật độ sử dụng phòng"           #/tong-quan
+          Trang chi tiết                                     #/mat-do-phong
+  US-003  Tổng quan, widget "Thời gian sử dụng trung bình"   #/tong-quan
+  US-004  Trang điện thoại, màn hình 1 và 2                  /thong-bao-dien-thoai.html
+  US-005  Phòng/Bàn, chuông thông báo                        #/phong-ban
+          Trang điện thoại, màn hình 1 và 2                  /thong-bao-dien-thoai.html
+  US-006  Cài đặt > Thông báo                                #/cai-dat-thong-bao
+          Trang điện thoại, màn hình 3                       /thong-bao-dien-thoai.html
+
+Ghi chú prototype
+  - Dữ liệu cố định tại 22:40, 27/10/2026 để demo lặp lại được.
+  - Nút "Quản lý / Nhân viên" góc dưới trái đổi vai trò để xem khác biệt.
+  - Chấm vàng trên menu đánh dấu mục có tính năng mới.
+  - Chưa demo được: cập nhật real-time (US-001 AC-2), trạng thái 0 phòng
+    (US-001 AC-4), ô chưa có dữ liệu (US-002 AC-8), trả phòng làm mất cảnh báo
+    (US-005 AC-7).
+
+================================================================================
+LỊCH SỬ THAY ĐỔI
+================================================================================
+v0.1-v0.5 | Các bản nháp trước                                | 24/10/2026
+v0.6      | Viết lại cho khớp prototype                         | 27/10/2026
+          | - Gộp US-005 (bật/tắt) và US-007 (ngưỡng) thành US-006
+          | - US-001: bấm thẻ mở Phòng/Bàn; heatmap là widget riêng
+          | - US-002: heatmap thu gọn mặc định, thêm "Tùy chọn" ngày,
+          |   thêm trang chi tiết theo loại phòng
+          | - US-003: mặc định 7 ngày, bỏ làm tròn 5 phút, thêm "Ít dữ liệu"
+          | - US-005: Mức 1 = "báo trước X phút khi combo hết" (mặc định 15),
+          |   thay cho ngưỡng giờ tuyệt đối; ngưỡng áp dụng ngay
+          | - Thêm định nghĩa vai trò; bỏ ký hiệu emoji trong nội dung thông báo

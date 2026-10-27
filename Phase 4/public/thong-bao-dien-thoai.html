@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Điện thoại của Quản lý</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --blue: #0070f4;
+    --blue-50: #ebf3ff;
+    --ink: #1f2329;
+    --ink-2: #4e5969;
+    --ink-3: #86909c;
+    --line: #eceef2;
+    --fill: #f2f3f5;
+    --l1: #d46b08;
+    --l1-solid: #e07b00;
+    --l1-bg: #fff7e8;
+    --l2: #cb2634;
+    --l2-bg: #fff1f0;
+    --green: #00b14f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Inter, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, #e6efff 0, #f5f7fa 520px);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { font: inherit; cursor: pointer; }
+
+  /* ---------- Page ---------- */
+  .page { max-width: 1340px; margin: 0 auto; padding: 28px 16px 64px; }
+  .top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .top h1 { margin: 0; font-size: 22px; }
+  .top p { margin: 4px 0 0; color: var(--ink-2); font-size: 14px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { height: 36px; padding: 0 14px; border-radius: 8px; border: 1px solid #b8d4ff; background: #fff; color: var(--blue); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+  .btn:hover { background: var(--blue-50); }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { background: #005fd1; }
+
+  .phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; justify-items: center; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .cap { max-width: 300px; text-align: center; }
+  .cap b { display: block; font-size: 15px; }
+  .cap > span:not(.tag-us) { display: block; margin-top: 3px; font-size: 13px; color: var(--ink-2); }
+  .tag-us { display: inline-block; margin-top: 6px; padding: 1px 8px; border-radius: 999px; background: var(--blue-50); color: var(--blue); font-size: 12px; font-weight: 600; }
+
+  /* ---------- Phone frame ---------- */
+  .phone { width: 300px; height: 620px; border-radius: 46px; padding: 10px; background: #15171c; box-shadow: 0 24px 48px rgba(20, 30, 60, 0.22), inset 0 0 0 1.5px #3a3d45; position: relative; }
+  .screen { width: 100%; height: 100%; border-radius: 37px; overflow: hidden; position: relative; background: #fff; display: flex; flex-direction: column; }
+  .island { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 86px; height: 24px; border-radius: 14px; background: #000; z-index: 5; }
+  .status { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0; font-size: 13px; font-weight: 600; }
+  .status .r { display: flex; gap: 5px; align-items: center; }
+  .status svg { width: 16px; height: 16px; }
+
+  /* ---------- Lock screen ---------- */
+  .lock { background: radial-gradient(120% 70% at 20% 0%, #5aa2ff 0%, #1a64d6 45%, #0b2f7a 100%); color: #fff; }
+  .lock .status { color: #fff; }
+  .clock { text-align: center; margin-top: 8px; }
+  .clock .d { font-size: 14px; font-weight: 500; opacity: 0.9; }
+  .clock .t { font-size: 64px; font-weight: 600; line-height: 1.05; letter-spacing: -1px; }
+  .stack { margin-top: 18px; padding: 0 10px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+  .push { background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); color: var(--ink); border-radius: 18px; padding: 10px 12px; display: grid; grid-template-columns: 30px 1fr; gap: 0 10px; opacity: 0; transform: translateY(-10px) scale(0.98); transition: opacity 0.35s, transform 0.35s; }
+  .push.in { opacity: 1; transform: none; }
+  .push.hidden { display: none; }
+  .app-ic { width: 30px; height: 30px; border-radius: 8px; background: var(--blue); color: #fff; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; grid-row: span 2; }
+  .push .h { display: flex; justify-content: space-between; gap: 6px; font-size: 13px; }
+  .push .h b { font-weight: 600; }
+  .push .h time { color: var(--ink-3); font-size: 12px; white-space: nowrap; }
+  .push .m { font-size: 13px; color: var(--ink-2); line-height: 1.35; }
+  .lvl { font-style: normal; display: inline-block; padding: 0 5px; border-radius: 4px; font-size: 11px; font-weight: 700; margin-right: 4px; vertical-align: 1px; }
+  .lvl.l1 { background: var(--l1-bg); color: var(--l1); }
+  .lvl.l2 { background: var(--l2-bg); color: var(--l2); }
+  .lvl.full { background: var(--blue-50); color: var(--blue); }
+  .home-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 108px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, 0.85); }
+  .light .home-bar { background: #1f2329; }
+
+  /* ---------- App screens ---------- */
+  .app-head { padding: 4px 18px 10px; display: flex; align-items: center; justify-content: space-between; }
+  .app-head h2 { margin: 0; font-size: 22px; }
+  .app-head .mark { font-size: 13px; color: var(--blue); font-weight: 600; background: none; border: 0; padding: 0; }
+  .chips { display: flex; gap: 6px; padding: 0 18px 10px; overflow-x: auto; scrollbar-width: none; }
+  .chip { height: 30px; padding: 0 12px; border-radius: 999px; border: 0; background: var(--fill); color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+  .chip.on { background: var(--blue); color: #fff; font-weight: 600; }
+  .scroll { flex: 1; overflow-y: auto; scrollbar-width: none; }
+  .group { padding: 8px 18px 4px; font-size: 12px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.4px; }
+  .item { width: 100%; display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: start; padding: 11px 18px; background: #fff; border: 0; border-bottom: 1px solid var(--line); text-align: left; color: inherit; }
+  .item:hover { background: #f7f9fc; }
+  .item.hidden { display: none; }
+  .item .ic { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+  .item .ic svg { width: 18px; height: 18px; }
+  .ic.l1 { background: var(--l1-bg); color: var(--l1); }
+  .ic.l2 { background: var(--l2-bg); color: var(--l2); }
+  .ic.full { background: var(--blue-50); color: var(--blue); }
+  .item b { display: block; font-size: 14px; font-weight: 600; }
+  .item .m { display: block; font-size: 13px; color: var(--ink-2); margin-top: 1px; line-height: 1.35; }
+  .item time { font-size: 12px; color: var(--ink-3); white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .unread { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+  .item.read .unread { visibility: hidden; }
+  .foot-note { padding: 12px 18px 22px; font-size: 12px; color: var(--ink-3); text-align: center; }
+  .empty { display: none; padding: 40px 24px; text-align: center; color: var(--ink-3); font-size: 14px; }
+
+  .tabbar { flex-shrink: 0; height: 64px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 4px 14px; background: #fff; }
+  .tabbar div { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10.5px; color: var(--ink-3); position: relative; }
+  .tabbar div.on { color: var(--blue); font-weight: 600; }
+  .tabbar svg { width: 20px; height: 20px; }
+  .tabbar .badge { position: absolute; top: -3px; left: calc(50% + 4px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: #f53f3f; color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
+
+  /* Bottom sheet */
+  .sheet-bg { position: absolute; inset: 0; background: rgba(15, 20, 30, 0.35); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 6; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 22px 22px 0 0; padding: 10px 18px 26px; transform: translateY(100%); transition: transform 0.25s ease-out; z-index: 7; }
+  .open .sheet-bg { opacity: 1; pointer-events: auto; }
+  .open .sheet { transform: none; }
+  .grab { width: 36px; height: 4px; border-radius: 4px; background: #d9dce1; margin: 0 auto 12px; }
+  .sheet h3 { margin: 0; font-size: 18px; }
+  .sheet .sub { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+  .alert-line { margin-top: 12px; padding: 8px 10px; border-radius: 10px; font-size: 13px; }
+  .alert-line.l1 { background: var(--l1-bg); color: var(--l1); }
+  .alert-line.l2 { background: var(--l2-bg); color: var(--l2); }
+  .alert-line.full { background: var(--blue-50); color: var(--blue); }
+  .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 14px; font-size: 13px; }
+  .kv dt { color: var(--ink-3); }
+  .kv dd { margin: 1px 0 0; font-weight: 600; }
+  .sheet .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+  .sheet .row .btn { justify-content: center; height: 40px; }
+
+  /* Settings */
+  .sec-title { padding: 10px 18px 6px; font-size: 12px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.4px; }
+  .card { margin: 0 14px 10px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .set { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .set:last-child { border-bottom: 0; }
+  .set .tx { flex: 1; min-width: 0; }
+  .set b { display: block; font-size: 14px; font-weight: 600; }
+  .set .tx > span { display: block; font-size: 12px; color: var(--ink-3); margin-top: 1px; line-height: 1.35; }
+  .sw { position: relative; width: 44px; height: 26px; flex-shrink: 0; border: 0; border-radius: 999px; background: #c9cdd4; transition: background 0.2s; }
+  .sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); transition: transform 0.2s; }
+  .sw[aria-checked='true'] { background: var(--blue); }
+  .sw[aria-checked='true']::after { transform: translateX(18px); }
+  .info { margin: 4px 14px 0; padding: 10px 12px; border-radius: 12px; background: var(--fill); font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+
+  .legend { margin-top: 28px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; font-size: 13px; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+
+  /* ---------- Mobile occupancy (US-007) ---------- */
+  .sub-period { padding: 0 18px 8px; margin-top: -6px; font-size: 12px; color: var(--ink-3); }
+  .kpis { display: flex; gap: 6px; padding: 0 14px 10px; }
+  .kpi { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 8px 9px; }
+  .kpi small { display: block; font-size: 10.5px; color: var(--ink-3); white-space: nowrap; }
+  .kpi b { display: block; font-size: 15px; font-weight: 700; margin-top: 1px; white-space: nowrap; }
+  .kpi em { font-style: normal; font-size: 10.5px; font-weight: 600; color: var(--green); }
+  .today { margin: 0 14px 10px; padding: 9px 11px; border-radius: 12px; background: var(--blue-50); font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+  .today b { color: var(--ink); }
+  .today em { font-style: normal; font-weight: 600; color: var(--green); }
+  .mcard { margin: 0 14px 10px; border: 1px solid var(--line); border-radius: 14px; padding: 10px 10px 12px; }
+  .mcard-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px; }
+  .mcard-head b { font-size: 13px; }
+  .seg { display: flex; padding: 2px; border-radius: 8px; background: var(--fill); }
+  .seg button { border: 0; background: transparent; height: 22px; padding: 0 7px; border-radius: 6px; font-size: 10.5px; color: var(--ink-2); white-space: nowrap; }
+  .seg button.on { background: var(--blue); color: #fff; font-weight: 600; }
+  .mgrid-wrap { overflow-x: auto; scrollbar-width: none; }
+  .mgrid { display: grid; gap: 2px; align-items: center; }
+  .mgrid .dl { font-size: 10px; color: var(--ink-2); font-weight: 500; }
+  .mgrid .hl { font-size: 9px; color: var(--ink-3); white-space: nowrap; overflow: visible; height: 11px; }
+  .mcell { height: 15px; border-radius: 2px; border: 0; padding: 0; }
+  .mcell.sel { outline: 2px solid #ff8a00; outline-offset: 1px; position: relative; z-index: 1; }
+  .cellinfo { margin-top: 8px; padding: 7px 9px; border-radius: 8px; background: var(--fill); font-size: 11.5px; color: var(--ink-2); line-height: 1.4; }
+  .cellinfo b { color: var(--ink); }
+  .mlegend { display: flex; align-items: center; gap: 3px; margin-top: 8px; font-size: 10px; color: var(--ink-3); }
+  .mlegend i { width: 14px; height: 8px; border-radius: 2px; display: inline-block; }
+  .typebar { margin-top: 8px; font-size: 12px; }
+  .typebar .tl { display: flex; justify-content: space-between; margin-bottom: 3px; color: var(--ink-2); }
+  .typebar .tl b { color: var(--ink); }
+  .typebar .low { color: var(--l1); font-size: 10.5px; font-weight: 600; margin-left: 4px; }
+  .typebar .bar { height: 6px; border-radius: 3px; background: var(--fill); overflow: hidden; }
+  .typebar .bar i { display: block; height: 100%; border-radius: 3px; background: var(--blue); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .push, .sheet, .sheet-bg { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <div>
+      <h1>Điện thoại của Quản lý</h1>
+      <p>Bản mẫu · 22:40, Thứ Ba 27/10/2026 · Thông báo, cảnh báo và mật độ phòng. Nhân viên không có các màn hình này</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="replay" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+        Phát lại thông báo
+      </button>
+      <a class="btn primary" href="./#/phong-ban">Mở Phòng/Bàn trên máy tính</a>
+    </div>
+  </div>
+
+  <div class="phones">
+    <!-- ================= 1. Lock screen ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen lock">
+          <div class="island"></div>
+          <div class="status">
+            <span>22:40</span>
+            <span class="r">
+              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="15" width="3" height="6" rx="1"/><rect x="7" y="11" width="3" height="10" rx="1"/><rect x="12" y="7" width="3" height="14" rx="1"/><rect x="17" y="3" width="3" height="18" rx="1"/></svg>
+              <svg viewBox="0 0 28 14" style="width:24px"><rect x="0.5" y="0.5" width="23" height="13" rx="3.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="17" height="10" rx="2" fill="currentColor"/><rect x="25" y="4.5" width="2" height="5" rx="1" fill="currentColor"/></svg>
+            </span>
+          </div>
+          <div class="clock">
+            <div class="d">Thứ Ba, 27 tháng 10</div>
+            <div class="t">22:40</div>
+          </div>
+          <div class="stack" id="stack">
+            <div class="push" data-kind="l2">
+              <div class="app-ic">D</div>
+              <div class="h"><b><span class="lvl l2">Mức 2</span>Phòng 06 · Bất thường</b><time>bây giờ</time></div>
+              <div class="m">Đã dùng 12 giờ 40 phút (ngưỡng 12 giờ). Kiểm tra ngay.</div>
+            </div>
+            <div class="push" data-kind="l1">
+              <div class="app-ic">D</div>
+              <div class="h"><b><span class="lvl l1">Mức 1</span>Phòng 02 · Combo sắp hết</b><time>5 phút</time></div>
+              <div class="m">Combo 3 giờ, còn 15 phút.</div>
+            </div>
+            <div class="push" data-kind="l1">
+              <div class="app-ic">D</div>
+              <div class="h"><b><span class="lvl l1">Mức 1</span>Phòng 04 · Combo sắp hết</b><time>5 phút</time></div>
+              <div class="m">Combo Đêm 7 giờ, còn 15 phút.</div>
+            </div>
+            <div class="push" data-kind="full">
+              <div class="app-ic">D</div>
+              <div class="h"><b><span class="lvl full">Kín phòng</span>Man Mát CS2</b><time>21:45</time></div>
+              <div class="m">Tất cả 10 phòng đã có khách.</div>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+      </div>
+      <div class="cap">
+        <b>1. Màn hình khóa</b>
+        <span>Thông báo vẫn đến khi không mở app. Mỗi phòng chỉ nhận 1 thông báo cho mỗi mức.</span>
+        <span class="tag-us">US-004 · US-005</span>
+      </div>
+    </div>
+
+    <!-- ================= 2. In-app list ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen light" id="appScreen">
+          <div class="island"></div>
+          <div class="status"><span>22:41</span><span class="r">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="15" width="3" height="6" rx="1"/><rect x="7" y="11" width="3" height="10" rx="1"/><rect x="12" y="7" width="3" height="14" rx="1"/><rect x="17" y="3" width="3" height="18" rx="1"/></svg>
+            <svg viewBox="0 0 28 14" style="width:24px"><rect x="0.5" y="0.5" width="23" height="13" rx="3.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="17" height="10" rx="2" fill="currentColor"/><rect x="25" y="4.5" width="2" height="5" rx="1" fill="currentColor"/></svg>
+          </span></div>
+          <div class="app-head">
+            <h2>Thông báo</h2>
+            <button class="mark" type="button" id="markAll">Đã đọc tất cả</button>
+          </div>
+          <div class="chips" role="tablist">
+            <button class="chip on" data-f="all" type="button">Tất cả</button>
+            <button class="chip" data-f="alert" type="button">Cảnh báo phòng</button>
+            <button class="chip" data-f="full" type="button">Kín phòng</button>
+          </div>
+          <div class="scroll" id="list">
+            <div class="group">Hôm nay</div>
+            <button class="item" type="button" data-kind="l2" data-room="06">
+              <span class="ic l2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+              <span><b>Phòng 06 · Bất thường</b><span class="m">Đã dùng 12 giờ 40 phút (ngưỡng 12 giờ)</span></span>
+              <time>22:40<i class="unread"></i></time>
+            </button>
+            <button class="item" type="button" data-kind="l1" data-room="02">
+              <span class="ic l1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <span><b>Phòng 02 · Combo sắp hết</b><span class="m">Combo 3 giờ, còn 15 phút</span></span>
+              <time>22:35<i class="unread"></i></time>
+            </button>
+            <button class="item" type="button" data-kind="l1" data-room="04">
+              <span class="ic l1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <span><b>Phòng 04 · Combo sắp hết</b><span class="m">Combo Đêm 7 giờ, còn 15 phút</span></span>
+              <time>22:35<i class="unread"></i></time>
+            </button>
+            <button class="item read" type="button" data-kind="full">
+              <span class="ic full"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></span>
+              <span><b>Kín phòng</b><span class="m">Tất cả 10 phòng đã có khách</span></span>
+              <time>21:45<i class="unread"></i></time>
+            </button>
+            <div class="group">Hôm qua</div>
+            <button class="item read" type="button" data-kind="full">
+              <span class="ic full"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></span>
+              <span><b>Kín phòng</b><span class="m">Tất cả 10 phòng đã có khách</span></span>
+              <time>20:30<i class="unread"></i></time>
+            </button>
+            <div class="empty" id="empty">Không có thông báo</div>
+            <div class="foot-note">Thông báo bị tắt trong Cài đặt sẽ không hiện ở đây</div>
+          </div>
+          <div class="tabbar">
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Tổng quan</div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Phòng/Bàn</div>
+            <div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>Thông báo<span class="badge" id="badge">3</span></div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Tài khoản</div>
+          </div>
+
+          <div class="sheet-bg" id="sheetBg"></div>
+          <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+            <div class="grab"></div>
+            <h3 id="sheetTitle"></h3>
+            <div class="sub" id="sheetSub"></div>
+            <div class="alert-line" id="sheetAlert"></div>
+            <dl class="kv" id="sheetKv"></dl>
+            <div class="row">
+              <button class="btn" type="button" id="sheetClose">Đóng</button>
+              <a class="btn primary" href="./#/phong-ban">Xem phòng</a>
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+      </div>
+      <div class="cap">
+        <b>2. Danh sách trong app</b>
+        <span>Bấm một thông báo để xem nhanh tình trạng phòng.</span>
+        <span class="tag-us">US-004 · US-005</span>
+      </div>
+    </div>
+
+    <!-- ================= 3. Settings ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen light">
+          <div class="island"></div>
+          <div class="status"><span>22:42</span><span class="r">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="15" width="3" height="6" rx="1"/><rect x="7" y="11" width="3" height="10" rx="1"/><rect x="12" y="7" width="3" height="14" rx="1"/><rect x="17" y="3" width="3" height="18" rx="1"/></svg>
+            <svg viewBox="0 0 28 14" style="width:24px"><rect x="0.5" y="0.5" width="23" height="13" rx="3.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="17" height="10" rx="2" fill="currentColor"/><rect x="25" y="4.5" width="2" height="5" rx="1" fill="currentColor"/></svg>
+          </span></div>
+          <div class="app-head"><h2>Cài đặt thông báo</h2></div>
+          <div class="scroll">
+            <div class="sec-title">Gửi tới điện thoại này</div>
+            <div class="card">
+              <div class="set">
+                <div class="tx"><b>Kín phòng</b><span>Khi tất cả phòng đều có khách</span></div>
+                <button class="sw" type="button" role="switch" aria-checked="true" data-kind="full" aria-label="Kín phòng"></button>
+              </div>
+              <div class="set">
+                <div class="tx"><b><span class="lvl l1">Mức 1</span>Combo sắp hết</b><span>Báo trước 15 phút khi combo kết thúc</span></div>
+                <button class="sw" type="button" role="switch" aria-checked="true" data-kind="l1" aria-label="Combo sắp hết"></button>
+              </div>
+              <div class="set">
+                <div class="tx"><b><span class="lvl l2">Mức 2</span>Bất thường</b><span>Phòng dùng liên tục từ 12 giờ</span></div>
+                <button class="sw" type="button" role="switch" aria-checked="true" data-kind="l2" aria-label="Bất thường"></button>
+              </div>
+            </div>
+            <div class="info">
+              Tắt ở đây chỉ dừng thông báo trên điện thoại. Cảnh báo vẫn hiện trên màn hình Phòng/Bàn.
+              Ngưỡng thời gian chỉnh trên máy tính: Cài đặt &gt; Thông báo.
+            </div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+      </div>
+      <div class="cap">
+        <b>3. Bật/tắt trên điện thoại</b>
+        <span>Thử tắt một loại: thông báo đó biến mất ở màn hình 1 và 2.</span>
+        <span class="tag-us">US-006</span>
+      </div>
+    </div>
+
+    <!-- ================= 4. Mobile occupancy ================= -->
+    <div class="col">
+      <div class="phone">
+        <div class="screen light">
+          <div class="island"></div>
+          <div class="status"><span>22:43</span><span class="r">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="15" width="3" height="6" rx="1"/><rect x="7" y="11" width="3" height="10" rx="1"/><rect x="12" y="7" width="3" height="14" rx="1"/><rect x="17" y="3" width="3" height="18" rx="1"/></svg>
+            <svg viewBox="0 0 28 14" style="width:24px"><rect x="0.5" y="0.5" width="23" height="13" rx="3.5" fill="none" stroke="currentColor"/><rect x="2" y="2" width="17" height="10" rx="2" fill="currentColor"/><rect x="25" y="4.5" width="2" height="5" rx="1" fill="currentColor"/></svg>
+          </span></div>
+          <div class="app-head"><h2>Mật độ phòng</h2></div>
+          <div class="sub-period" id="mPeriod"></div>
+          <div class="chips" id="mRange">
+            <button class="chip" data-r="7d" type="button">7 ngày</button>
+            <button class="chip on" data-r="4w" type="button">4 tuần</button>
+            <button class="chip" data-r="this-month" type="button">Tháng này</button>
+          </div>
+          <div class="scroll">
+            <div class="kpis">
+              <div class="kpi"><small>Phủ trung bình</small><b id="mAvg"></b><em id="mDelta"></em></div>
+              <div class="kpi"><small>Cao điểm</small><b id="mPeak"></b></div>
+              <div class="kpi"><small>Vắng nhất</small><b id="mLow"></b></div>
+            </div>
+            <div class="today">Tỉ lệ phủ hôm nay: <b>52%</b> · So với hôm qua: <b>47%</b> <em>+5%</em></div>
+
+            <div class="mcard">
+              <div class="mcard-head">
+                <b>Theo khung giờ</b>
+                <div class="seg" id="mSpan">
+                  <button class="on" data-s="open" type="button">Giờ mở cửa</button>
+                  <button data-s="all" type="button">Cả ngày</button>
+                </div>
+              </div>
+              <div class="mgrid-wrap"><div class="mgrid" id="mGrid"></div></div>
+              <div class="cellinfo" id="mInfo" aria-live="polite"></div>
+              <div class="mlegend" id="mLegend"></div>
+            </div>
+
+            <div class="mcard">
+              <div class="mcard-head"><b>Theo loại phòng</b></div>
+              <div id="mTypes"></div>
+            </div>
+            <div class="foot-note">Tính từ giờ nhận phòng đến giờ trả phòng</div>
+          </div>
+          <div class="tabbar">
+            <div class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Tổng quan</div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Phòng/Bàn</div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>Thông báo</div>
+            <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Tài khoản</div>
+          </div>
+          <div class="home-bar"></div>
+        </div>
+      </div>
+      <div class="cap">
+        <b>4. Mật độ phòng trên điện thoại</b>
+        <span>Chủ quán tự xem bất cứ lúc nào. Chạm vào ô để xem chi tiết khung giờ.</span>
+        <span class="tag-us">US-007</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="lvl full">Kín phòng</i>Tất cả phòng có khách</span>
+    <span><i class="lvl l1">Mức 1</i>Combo sắp hết</span>
+    <span><i class="lvl l2">Mức 2</i>Thời gian bất thường</span>
+  </div>
+</div>
+
+<script>
+  const enabled = { full: true, l1: true, l2: true };
+
+  // ---------- Lock screen: notifications arrive one by one ----------
+  const pushes = [...document.querySelectorAll('.push')];
+  let timers = [];
+  function replay() {
+    timers.forEach(clearTimeout);
+    timers = [];
+    pushes.forEach((p) => p.classList.remove('in'));
+    // newest is on top, so reveal from the bottom (oldest) up
+    const visible = pushes.filter((p) => enabled[p.dataset.kind]);
+    pushes.forEach((p) => p.classList.toggle('hidden', !enabled[p.dataset.kind]));
+    visible.slice().reverse().forEach((p, i) => {
+      timers.push(setTimeout(() => p.classList.add('in'), 300 + i * 450));
+    });
+  }
+  document.getElementById('replay').addEventListener('click', replay);
+
+  // ---------- In-app list ----------
+  const items = [...document.querySelectorAll('.item')];
+  let filter = 'all';
+  function renderList() {
+    let shown = 0;
+    items.forEach((it) => {
+      const k = it.dataset.kind;
+      const byFilter = filter === 'all' || (filter === 'full' ? k === 'full' : k !== 'full');
+      const show = enabled[k] && byFilter;
+      it.classList.toggle('hidden', !show);
+      if (show) shown++;
+    });
+    document.getElementById('empty').style.display = shown ? 'none' : 'block';
+    const unread = items.filter((it) => !it.classList.contains('read') && enabled[it.dataset.kind]).length;
+    const badge = document.getElementById('badge');
+    badge.textContent = unread;
+    badge.style.display = unread ? 'flex' : 'none';
+  }
+  document.querySelectorAll('.chip').forEach((c) =>
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach((x) => x.classList.toggle('on', x === c));
+      filter = c.dataset.f;
+      renderList();
+    }),
+  );
+  document.getElementById('markAll').addEventListener('click', () => {
+    items.forEach((it) => it.classList.add('read'));
+    renderList();
+  });
+
+  // ---------- Bottom sheet ----------
+  const ROOMS = {
+    '06': { title: 'Phòng 06', sub: 'Phòng Couple · 2 khách', cls: 'l2', alert: '<b>Mức 2 · Bất thường</b> · quá ngưỡng 40 phút',
+      kv: [['Giờ vào', '10:00'], ['Đã dùng', '12 giờ 40 phút'], ['Tạm tính', '1,184,000'], ['Ngưỡng', '12 giờ']] },
+    '02': { title: 'Phòng 02', sub: 'Phòng Couple · 2 khách', cls: 'l1', alert: '<b>Mức 1 · Combo sắp hết</b> · còn 10 phút',
+      kv: [['Giờ vào', '19:50'], ['Đã dùng', '2 giờ 50 phút'], ['Combo', 'Combo 3 giờ'], ['Tạm tính', '299,000']] },
+    '04': { title: 'Phòng 04', sub: 'Phòng Big (4–6 người) · 6 khách', cls: 'l1', alert: '<b>Mức 1 · Combo sắp hết</b> · còn 10 phút',
+      kv: [['Giờ vào', '15:50'], ['Đã dùng', '6 giờ 50 phút'], ['Combo', 'Combo Đêm 7 giờ'], ['Tạm tính', '649,000']] },
+    full: { title: 'Kín phòng', sub: 'Man Mát CS2', cls: 'full', alert: 'Tất cả 10 phòng đã có khách lúc 21:45',
+      kv: [['Phòng có khách', '10/10'], ['Hiện tại', '8/10']] },
+  };
+  const screen = document.getElementById('appScreen');
+  function openSheet(key) {
+    const r = ROOMS[key];
+    document.getElementById('sheetTitle').textContent = r.title;
+    document.getElementById('sheetSub').textContent = r.sub;
+    const a = document.getElementById('sheetAlert');
+    a.className = 'alert-line ' + r.cls;
+    a.innerHTML = r.alert;
+    document.getElementById('sheetKv').innerHTML = r.kv.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
+    screen.classList.add('open');
+  }
+  const closeSheet = () => screen.classList.remove('open');
+  items.forEach((it) =>
+    it.addEventListener('click', () => {
+      it.classList.add('read');
+      renderList();
+      openSheet(it.dataset.room || 'full');
+    }),
+  );
+  document.getElementById('sheetBg').addEventListener('click', closeSheet);
+  document.getElementById('sheetClose').addEventListener('click', closeSheet);
+  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeSheet());
+
+  // ---------- Settings toggles drive the other two phones ----------
+  document.querySelectorAll('.sw').forEach((sw) =>
+    sw.addEventListener('click', () => {
+      const on = sw.getAttribute('aria-checked') !== 'true';
+      sw.setAttribute('aria-checked', String(on));
+      enabled[sw.dataset.kind] = on;
+      pushes.forEach((p) => {
+        if (p.dataset.kind === sw.dataset.kind) {
+          p.classList.toggle('hidden', !on);
+          if (on) requestAnimationFrame(() => p.classList.add('in'));
+        }
+      });
+      renderList();
+    }),
+  );
+
+  renderList();
+  replay();
+
+  // ================= Mobile occupancy (same generator as the web app) =================
+  const HOUR_PROFILE = [0.42,0.28,0.14,0.05,0.01,0,0,0,0.02,0.07,0.14,0.2,0.24,0.26,0.3,0.33,0.38,0.46,0.6,0.76,0.86,0.84,0.72,0.58];
+  const DAY_FACTOR = [0.72,0.7,0.78,0.86,1.0,1.12,1.02];
+  const RANGE_SEED = { '7d': 11, '4w': 7, 'this-month': 5 };
+  const RANGE_NOISE = { '7d': 0.16, '4w': 0.08, 'this-month': 0.09 };
+  const TYPE_FACTOR = { all: 1, Couple: 1.06, Standard: 0.92, Big: 1.0, VIP: 0.7 };
+  const RANGE_META = {
+    '7d': { period: '20/10 – 26/10/2026', delta: '+3%' },
+    '4w': { period: '29/09 – 26/10/2026 · TB 4 tuần', delta: '+2%' },
+    'this-month': { period: '01/10 – 26/10/2026', delta: '+1%' },
+  };
+  const DAYS = ['T2','T3','T4','T5','T6','T7','CN'];
+  const DAY_FULL = ['Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy','Chủ Nhật'];
+  const TYPES = [['Couple','Phòng Couple',4],['Standard','Phòng Standard',3],['Big','Phòng Big',2],['VIP','Phòng VIP',1]];
+  const OPEN = [10,11,12,13,14,15,16,17,18,19,20,21,22,23,0,1];
+  const ALLH = Array.from({ length: 24 }, (_, i) => i);
+  const COLORS = ['#F2F3F5','#E3EEFF','#C2DBFF','#94BFFF','#5C9DFF','#2A7DFB','#0062E0','#0045A8'];
+  const STEPS = [0.02,0.15,0.3,0.45,0.6,0.75,0.9];
+  const color = (v) => { let i = 0; while (i < STEPS.length && v >= STEPS[i]) i++; return COLORS[i]; };
+  const hh = (h) => String(h % 24).padStart(2, '0') + ':00';
+
+  function hash(a, b, c) {
+    let x = (a * 374761393 + b * 668265263 + c * 2147483647) | 0;
+    x = (x ^ (x >>> 13)) * 1274126177;
+    x = x ^ (x >>> 16);
+    return ((x >>> 0) % 10000) / 10000;
+  }
+  function occ(day, hour, range, type) {
+    const fd = hour <= 2 ? (day + 6) % 7 : day;
+    let v = HOUR_PROFILE[hour] * DAY_FACTOR[fd];
+    if ((day === 5 || day === 6) && hour >= 10 && hour <= 17) v += 0.16;
+    if (type === 'Big' && (day >= 4 || hour >= 19)) v *= 1.12;
+    if (type === 'Couple' && hour >= 20) v *= 1.06;
+    v *= TYPE_FACTOR[type];
+    if (HOUR_PROFILE[hour] > 0) v += (hash(day, hour, RANGE_SEED[range] + type.length) - 0.5) * 2 * RANGE_NOISE[range];
+    return Math.min(1, Math.max(0, v));
+  }
+  const matrix = (range, type = 'all') => DAYS.map((_, d) => ALLH.map((h) => occ(d, h, range, type)));
+  function stats(m) {
+    let sum = 0, n = 0, peak = { v: -1 }, low = { v: 2 };
+    m.forEach((row, d) => OPEN.forEach((h) => {
+      const v = row[h]; sum += v; n++;
+      if (v > peak.v) peak = { d, h, v };
+      if (v < low.v) low = { d, h, v };
+    }));
+    return { avg: sum / n, peak, low };
+  }
+
+  let mRange = '4w', mSpan = 'open', mSel = null;
+  function renderMobile() {
+    const m = matrix(mRange);
+    const st = stats(m);
+    if (!mSel) mSel = { d: st.peak.d, h: st.peak.h };
+    document.getElementById('mPeriod').textContent = RANGE_META[mRange].period;
+    document.getElementById('mAvg').textContent = Math.round(st.avg * 100) + '%';
+    document.getElementById('mDelta').textContent = RANGE_META[mRange].delta;
+    document.getElementById('mPeak').textContent = DAYS[st.peak.d] + ', ' + st.peak.h + 'h';
+    document.getElementById('mLow').textContent = DAYS[st.low.d] + ', ' + st.low.h + 'h';
+
+    const hours = mSpan === 'open' ? OPEN : ALLH;
+    const grid = document.getElementById('mGrid');
+    grid.style.gridTemplateColumns = `18px repeat(${hours.length}, ${mSpan === 'open' ? 'minmax(0,1fr)' : '13px'})`;
+    let html = '';
+    m.forEach((row, d) => {
+      html += `<span class="dl">${DAYS[d]}</span>`;
+      hours.forEach((h) => {
+        const sel = mSel.d === d && mSel.h === h ? ' sel' : '';
+        html += `<button type="button" class="mcell${sel}" data-d="${d}" data-h="${h}" style="background:${color(row[h])}" aria-label="${DAY_FULL[d]} ${hh(h)}: ${Math.round(row[h] * 100)}%"></button>`;
+      });
+    });
+    html += '<span></span>';
+    hours.forEach((h, i) => { html += `<span class="hl">${i % 4 === 0 ? h + 'h' : ''}</span>`; });
+    grid.innerHTML = html;
+    grid.querySelectorAll('.mcell').forEach((c) => c.addEventListener('click', () => {
+      mSel = { d: +c.dataset.d, h: +c.dataset.h };
+      renderMobile();
+    }));
+
+    const v = m[mSel.d][mSel.h];
+    document.getElementById('mInfo').innerHTML =
+      `<b>${DAY_FULL[mSel.d]}, ${hh(mSel.h)} – ${hh(mSel.h + 1)}</b><br>${Math.round(v * 100)}% phòng có khách · TB ${(v * 10).toFixed(1)}/10 phòng`;
+    document.getElementById('mLegend').innerHTML = 'Thấp ' + COLORS.map((c) => `<i style="background:${c}"></i>`).join('') + ' Cao';
+
+    const rows = TYPES.map(([k, label]) => ({ label, v: stats(matrix(mRange, k)).avg })).sort((a, b) => b.v - a.v);
+    document.getElementById('mTypes').innerHTML = rows.map((r, i) => `
+      <div class="typebar">
+        <div class="tl"><span>${r.label}${i === rows.length - 1 ? '<span class="low">Thấp nhất</span>' : ''}</span><b>${Math.round(r.v * 100)}%</b></div>
+        <div class="bar"><i style="width:${r.v * 100}%"></i></div>
+      </div>`).join('');
+  }
+  document.querySelectorAll('#mRange .chip').forEach((c) => c.addEventListener('click', () => {
+    document.querySelectorAll('#mRange .chip').forEach((x) => x.classList.toggle('on', x === c));
+    mRange = c.dataset.r; mSel = null; renderMobile();
+  }));
+  document.querySelectorAll('#mSpan button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('#mSpan button').forEach((x) => x.classList.toggle('on', x === b));
+    mSpan = b.dataset.s; renderMobile();
+  }));
+  renderMobile();
+</script>
+</body>
+</html>

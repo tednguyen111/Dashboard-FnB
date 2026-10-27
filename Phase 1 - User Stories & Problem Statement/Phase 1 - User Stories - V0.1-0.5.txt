@@ -1,0 +1,485 @@
+================================================================================
+PHASE 1 -- USER STORIES
+Project: Room Occupancy Analytics
+Phiên bản: 0.5 -- DRAFT (đang review)
+Tác giả BA: Nguyễn Tuấn Đạt
+================================================================================
+STORY MAP OVERVIEW
+================================================================================
+
+THEME: Theo dõi độ phủ phòng theo thời gian thực tế
+
+  EPIC 1: ROT-EP-01 -- Occupancy Analytics (Phân tích độ phủ phòng)
+    Feature 1: ROT-EP-01-FE-01 -- Widget tỷ lệ phủ phòng real-time
+    Feature 2: ROT-EP-01-FE-02 -- Heatmap lịch sử phủ phòng
+
+  EPIC 2: ROT-EP-02 -- Average Usage Time (Thời gian sử dụng trung bình)
+    Feature 1: ROT-EP-02-FE-01 -- Widget AVG Usage Time theo loại phòng
+
+  EPIC 3: ROT-EP-03 -- Notifications & Alerts (Thông báo & Cảnh báo)
+    Feature 1: ROT-EP-03-FE-01 -- Thông báo kín phòng
+    Feature 2: ROT-EP-03-FE-02 -- Cài đặt thông báo cá nhân (bật/tắt)
+    Feature 3: ROT-EP-03-FE-03 -- Cảnh báo phòng sử dụng bất thường
+    Feature 4: ROT-EP-03-FE-04 -- Cài đặt ngưỡng cảnh báo (Alert Configuration)
+
+MoSCoW:
+  Must Have  : US-001, US-002, US-003
+  Should Have: US-004, US-005, US-006, US-007
+
+================================================================================
+EPIC 1: OCCUPANCY ANALYTICS
+================================================================================
+
+--------------------------------------------------------------------------------
+US-001 | Xem widget tỷ lệ phủ phòng real-time trên dashboard
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-01
+Feature ID  : ROT-EP-01-FE-01
+US ID       : ROT-EP-01-FE-01-US-001
+Priority    : Must Have
+Dependency  : 1. Hệ thống đã ghi nhận check-in / check-out theo thời gian thực
+              2. Tổng số phòng (N) đã được thiết lập từ quá trình onboarding
+Story Points: [TBD]
+
+User Story:
+  Là một Chủ quán,
+  Tôi muốn thấy widget hiển thị tỷ lệ phủ phòng hiện tại ngay trên dashboard,
+  Để biết ngay bao nhiêu % phòng đang có khách mà không cần vào màn hình khác,
+  giống như KiotViet hiển thị "Tỷ lệ phủ bàn".
+
+Acceptance Criteria:
+
+  AC-1 -- Happy Path: Widget hiển thị tỷ lệ phủ phòng hiện tại
+  GIVEN Chủ quán đã đăng nhập và vào dashboard
+  WHEN dashboard tải xong
+  THEN widget "Tỷ lệ phủ phòng" hiển thị:
+       - % phủ phòng hiện tại (ví dụ: 80%)
+       - Số phòng có khách / tổng số phòng (ví dụ: 8/10 phòng)
+
+  AC-2 -- Widget cập nhật real-time khi có check-in / check-out
+  GIVEN Widget đang hiển thị trên dashboard
+  WHEN có check-in hoặc check-out xảy ra
+  THEN widget tự động cập nhật số liệu mà không cần reload trang
+
+  AC-3 -- Click vào widget mở màn hình Heatmap
+  GIVEN Chủ quán đang xem widget tỷ lệ phủ phòng
+  WHEN họ click vào widget
+  THEN hệ thống mở màn hình Heatmap lịch sử (US-002)
+
+  AC-4 -- Không có dữ liệu
+  GIVEN Chưa có check-in nào trong ngày
+  WHEN dashboard tải
+  THEN widget hiển thị "0% -- 0/N phòng" thay vì để trống
+
+Business Rules:
+  BR-001: % phủ phòng = (số phòng đang có khách) / N x 100
+          N = tổng số phòng, đã được thiết lập từ quá trình onboarding
+  BR-002: Phòng được tính là "có khách" nếu check-in đã xảy ra và chưa check-out
+  BR-003: Widget chỉ phản ánh trạng thái hiện tại, không phải lịch sử
+
+--------------------------------------------------------------------------------
+US-002 | Xem Heatmap lịch sử độ phủ phòng theo khung giờ
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-01
+Feature ID  : ROT-EP-01-FE-02
+US ID       : ROT-EP-01-FE-02-US-002
+Priority    : Must Have
+Dependency  : ROT-EP-01-FE-01-US-001 hoàn thành
+Story Points: [TBD]
+
+User Story:
+  Là một Chủ quán,
+  Tôi muốn xem bảng màu heatmap thể hiện độ phủ phòng theo từng ngày trong
+  tuần và khung giờ,
+  Để nhìn một lượt nhận ra ngay khung giờ nào đông/vắng theo pattern tuần --
+  không cần nhìn số liệu chi tiết -- từ đó lên kế hoạch marketing và KM.
+
+Acceptance Criteria:
+
+  AC-1 -- Happy Path: Heatmap hiển thị dạng bảng màu 7 × 24
+  GIVEN Chủ quán click vào widget tỷ lệ phủ phòng (US-001)
+  WHEN màn hình Heatmap mở ra
+  THEN hệ thống hiển thị bảng màu:
+       trục ngang = 24 khung giờ (0h–23h, mỗi ô = 1 tiếng)
+       trục dọc = 7 ngày trong tuần (T2–CN)
+       mỗi ô hiển thị màu theo độ phủ phòng, KHÔNG hiển thị số liệu trong ô
+       (xanh nhạt = vắng, xanh đậm dần = đông, tối nhất = kín phòng)
+
+  AC-2 -- Chọn date range để xem
+  GIVEN Chủ quán đang xem Heatmap
+  WHEN họ chọn "7 ngày gần nhất", "30 ngày", "Tháng này" hoặc tự nhập
+  THEN hệ thống tính lại màu sắc từng ô dựa trên khoảng thời gian đó
+
+  AC-3 -- Chưa đủ dữ liệu
+  GIVEN Tính năng mới bật, chưa đủ dữ liệu cho khoảng đã chọn
+  WHEN hệ thống tải dữ liệu
+  THEN ô không có dữ liệu hiển thị màu xám trung tính (phân biệt với ô có 0%)
+       kèm ghi chú "Dữ liệu từ [ngày bắt đầu] -- đang tích lũy"
+
+  AC-4 -- Có legend giải thích màu sắc
+  GIVEN Chủ quán đang xem Heatmap
+  WHEN màn hình hiển thị
+  THEN có legend màu sắc từ nhạt đến đậm với % tương ứng
+       (ví dụ: 0–25% / 25–50% / 50–75% / 75–100%)
+
+Business Rules:
+  BR-004: Màu sắc mỗi ô = trung bình % phủ phòng của cùng thứ + khung giờ đó
+          trong khoảng date range được chọn
+  BR-005: Ô không có dữ liệu ≠ ô có 0% -- phải phân biệt bằng màu khác nhau
+  BR-006: Date range mặc định = 4 tuần gần nhất
+  BR-007: Dữ liệu lịch sử lưu tối đa 90 ngày
+
+================================================================================
+EPIC 2: AVERAGE USAGE TIME
+================================================================================
+
+--------------------------------------------------------------------------------
+US-003 | Xem widget thời gian trung bình sử dụng phòng theo loại phòng
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-02
+Feature ID  : ROT-EP-02-FE-01
+US ID       : ROT-EP-02-FE-01-US-003
+Priority    : Must Have
+Dependency  : Hệ thống đã ghi nhận check-in / check-out theo thời gian thực
+Story Points: [TBD]
+
+User Story:
+  Là một Chủ quán,
+  Tôi muốn xem widget hiển thị thời gian trung bình khách sử dụng phòng,
+  phân theo từng loại phòng,
+  Để thiết kế gói dịch vụ và khung giá phù hợp -- ví dụ nếu khách Couple
+  thường ngồi 2h15, có thể cân nhắc gói 2h30 thay vì 2h hoặc 3h.
+
+Acceptance Criteria:
+
+  AC-1 -- Happy Path: Widget hiển thị AVG theo loại phòng
+  GIVEN Chủ quán vào dashboard
+  WHEN widget AVG Usage Time tải xong
+  THEN widget hiển thị danh sách loại phòng và thời gian sử dụng trung bình
+       (ví dụ: Phòng Couple -- 2 giờ 15 phút / Phòng Big -- 3 giờ 05 phút)
+
+  AC-2 -- Lọc theo khoảng thời gian
+  GIVEN Chủ quán đang xem widget AVG Usage Time
+  WHEN họ chọn "7 ngày", "30 ngày" hoặc tự nhập khoảng ngày
+  THEN widget tính lại thời gian trung bình theo khoảng đã chọn
+
+  AC-3 -- Không đủ dữ liệu để tính trung bình
+  GIVEN Một loại phòng có ít hơn 5 lượt check-in hợp lệ
+  WHEN widget hiển thị
+  THEN hiển thị giá trị kèm ghi chú:
+       "Dữ liệu ít (dưới 5 lượt) -- chưa đủ để kết luận"
+
+  AC-4 -- Session bất thường bị loại nhưng vẫn báo
+  GIVEN Có session vượt ngưỡng Alert mức 2 trong khoảng thời gian chọn
+  WHEN widget hiển thị AVG Time
+  THEN tính trung bình chỉ từ session hợp lệ
+       VÀ hiển thị: "Có [X] session bất thường đã bị loại khỏi phép tính"
+
+Business Rules:
+  BR-008: Thời gian sử dụng = thời điểm check-out - thời điểm check-in
+  BR-009: Session hợp lệ: 10 phút ≤ thời gian < ngưỡng Alert mức 2
+          Ngưỡng Alert mức 2 mặc định = 12 tiếng (điều chỉnh tại US-007)
+  BR-010: Thời gian trung bình làm tròn đến 5 phút gần nhất
+  BR-011: Khoảng thời gian mặc định = 30 ngày gần nhất
+
+================================================================================
+EPIC 3: NOTIFICATIONS & ALERTS
+================================================================================
+
+--------------------------------------------------------------------------------
+US-004 | Nhận thông báo đẩy khi toàn bộ phòng đã có khách
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-03
+Feature ID  : ROT-EP-03-FE-01
+US ID       : ROT-EP-03-FE-01-US-004
+Priority    : Should Have
+Dependency  : Hệ thống đã ghi nhận check-in theo thời gian thực
+Story Points: [TBD]
+
+User Story:
+  Là một Quản lý ca,
+  Tôi muốn nhận thông báo đẩy ngay khi tất cả phòng đều đã có khách,
+  Để kịp thời xử lý -- ngừng nhận booking online, thông báo khách walk-in --
+  mà không cần liên tục mở app kiểm tra.
+
+Acceptance Criteria:
+
+  AC-1 -- Happy Path: Nhận thông báo khi phòng vừa kín
+  GIVEN Quản lý ca đã bật thông báo "Kín phòng" trong cài đặt cá nhân
+  WHEN phòng cuối cùng được check-in (số phòng có khách = tổng số phòng)
+  THEN hệ thống gửi push notification đến thiết bị của Quản lý ca
+       trong vòng 60 giây
+       với nội dung: "[Tên quán] -- Tất cả [X] phòng đã có khách"
+
+  AC-2 -- Không gửi thông báo trùng lặp
+  GIVEN Thông báo full phòng đã được gửi
+  WHEN có sự kiện check-in khác xảy ra nhưng số phòng vẫn bằng tổng
+  THEN hệ thống KHÔNG gửi thêm thông báo thứ 2
+       cho đến khi có ít nhất 1 phòng check-out rồi full lại
+
+  AC-3 -- Thông báo hiện khi tắt app
+  GIVEN Quản lý ca đang không mở app
+  WHEN phòng vừa kín
+  THEN thông báo vẫn hiện trên màn hình khóa của thiết bị
+
+  AC-4 -- Nhân viên không nhận được thông báo này
+  GIVEN Một tài khoản nhân viên (role Staff) đang dùng app
+  WHEN toàn bộ phòng vừa kín
+  THEN hệ thống KHÔNG gửi thông báo đến tài khoản nhân viên đó
+
+Business Rules:
+  BR-012: Thông báo kín phòng chỉ gửi đến tài khoản có role Manager hoặc Owner
+  BR-013: Thông báo gửi trong vòng tối đa 60 giây sau khi phòng cuối check-in
+  BR-014: Mỗi chu kỳ "full → có phòng trống → full lại" tạo ra 1 thông báo mới
+  BR-015: Kênh gửi: push notification qua app. SMS là tính năng mở rộng sau
+
+--------------------------------------------------------------------------------
+US-005 | Bật/tắt từng loại thông báo trong cài đặt cá nhân
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-03
+Feature ID  : ROT-EP-03-FE-02
+US ID       : ROT-EP-03-FE-02-US-005
+Priority    : Should Have
+Dependency  : ROT-EP-03-FE-01-US-004 và ROT-EP-03-FE-03-US-006 hoàn thành
+Story Points: [TBD]
+
+User Story:
+  Là một Quản lý ca,
+  Tôi muốn bật hoặc tắt từng loại thông báo một cách độc lập trong phần
+  cài đặt của mình,
+  Để linh hoạt điều chỉnh theo tình huống -- ví dụ tắt thông báo kín phòng
+  khi đang họp nhưng vẫn nhận cảnh báo phòng bất thường, hoặc ngược lại.
+
+Acceptance Criteria:
+
+  AC-1 -- Tắt một loại thông báo không ảnh hưởng loại khác
+  GIVEN Quản lý ca truy cập Cài đặt > Thông báo
+  WHEN họ tắt toggle "Thông báo kín phòng"
+  THEN hệ thống lưu trạng thái tắt cho loại thông báo này
+       và các loại thông báo khác vẫn hoạt động bình thường
+
+  AC-2 -- Bật lại thông báo
+  GIVEN Quản lý ca đã tắt một loại thông báo trước đó
+  WHEN họ bật lại toggle tương ứng
+  THEN hệ thống lưu trạng thái bật
+       và loại thông báo đó được gửi bình thường từ lần tiếp theo
+
+  AC-3 -- Trạng thái mặc định khi tạo tài khoản mới
+  GIVEN Một tài khoản Manager mới được tạo
+  WHEN họ lần đầu truy cập Cài đặt > Thông báo
+  THEN toggle "Thông báo kín phòng" ở trạng thái BẬT mặc định
+       toggle "Cảnh báo combo sắp hết (Mức 1)" ở trạng thái BẬT mặc định
+       toggle "Cảnh báo bất thường (Mức 2)" ở trạng thái BẬT mặc định
+       VÀ hệ thống hiển thị banner gợi ý:
+       "Bạn chưa cài đặt ngưỡng cảnh báo. Vào Cài đặt > Ngưỡng Cảnh Báo để thiết lập."
+
+  AC-4 -- Nhân viên không thấy màn hình cài đặt thông báo push
+  GIVEN Một tài khoản nhân viên (role Staff) đăng nhập
+  WHEN họ truy cập phần Cài đặt
+  THEN mục "Thông báo" (push notification) không hiển thị trong danh sách cài đặt
+       Lưu ý: Nhân viên vẫn thấy flag cảnh báo mức 1 trực tiếp trên màn hình phòng
+
+Business Rules:
+  BR-016: Cài đặt thông báo là cài đặt cá nhân -- mỗi tài khoản độc lập
+  BR-017: Có 3 toggle độc lập dành cho Manager/Owner:
+          (1) Thông báo kín phòng -- liên kết với US-004
+          (2) Cảnh báo combo sắp hết (Mức 1) -- liên kết với US-006
+          (3) Cảnh báo bất thường (Mức 2) -- liên kết với US-006
+  BR-018: Chỉ tài khoản Manager và Owner mới thấy màn hình cài đặt thông báo push
+  BR-019: Thay đổi cài đặt có hiệu lực ngay lập tức, không cần đăng xuất lại
+  BR-020: Nếu Manager chưa cài đặt ngưỡng Alert mức 1 (US-007),
+          toggle mức 1 vẫn BẬT nhưng không có thông báo nào được gửi
+          vì chưa có ngưỡng để trigger
+
+--------------------------------------------------------------------------------
+US-006 | Cảnh báo phòng sử dụng vượt ngưỡng trong khi session đang active
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-03
+Feature ID  : ROT-EP-03-FE-03
+US ID       : ROT-EP-03-FE-03-US-006
+Priority    : Should Have
+Dependency  : ROT-EP-03-FE-04-US-007 (Alert Configuration) hoàn thành
+Story Points: [TBD]
+
+User Story:
+  Là một Quản lý ca,
+  Tôi muốn nhận cảnh báo ngay khi phòng đang sử dụng vượt quá ngưỡng thời gian
+  đã cài đặt,
+  Để kịp thời xử lý -- nhắc khách về giá lẻ khi combo hết, hoặc kiểm tra
+  phòng khi có dấu hiệu bất thường -- trước khi ảnh hưởng đến khách và vận hành.
+
+Acceptance Criteria:
+
+  AC-1 -- Flag mức 1 hiển thị trên màn hình phòng khi đạt ngưỡng (Staff + Manager)
+  GIVEN Manager đã cài đặt ngưỡng Alert mức 1 (ví dụ: 6h45)
+        VÀ một phòng đang active vừa đạt đúng mốc thời gian đó
+  WHEN nhân viên hoặc quản lý mở màn hình danh sách phòng
+  THEN phòng đó hiển thị flag cảnh báo mức 1 kèm thời gian đã sử dụng
+       (ví dụ: "⚠ Phòng 3 -- 6 giờ 50 phút -- Combo sắp hết")
+       Flag hiển thị cho tất cả role: Staff, Manager, Owner
+
+  AC-2 -- Push notification mức 1 gửi đến Manager/Owner
+  GIVEN Manager đã bật toggle "Cảnh báo combo sắp hết (Mức 1)"
+        VÀ đã cài đặt ngưỡng mức 1
+  WHEN một phòng vừa đạt ngưỡng Alert mức 1
+  THEN hệ thống gửi push notification đến Manager và Owner
+       với nội dung: "[Tên phòng] -- [X] tiếng -- Combo sắp hết, kiểm tra khách"
+
+  AC-3 -- Flag mức 2 hiển thị trên màn hình phòng khi đạt ngưỡng (Manager + Owner)
+  GIVEN Một phòng đang active vừa đạt ngưỡng Alert mức 2 (mặc định 12 tiếng)
+  WHEN Manager hoặc Owner mở màn hình danh sách phòng
+  THEN phòng đó hiển thị flag cảnh báo mức 2 với mức độ nghiêm trọng hơn
+       (ví dụ: " Phòng 3 -- 12 giờ 10 phút -- Cần kiểm tra ngay")
+       Flag mức 2 KHÔNG hiển thị trên màn hình của nhân viên (Staff)
+
+  AC-4 -- Push notification mức 2 gửi đến Manager/Owner
+  GIVEN Manager đã bật toggle "Cảnh báo bất thường (Mức 2)"
+  WHEN một phòng vừa đạt ngưỡng Alert mức 2
+  THEN hệ thống gửi push notification đến Manager và Owner
+       với nội dung: " [Tên phòng] -- [X] tiếng -- Kiểm tra ngay"
+
+  AC-5 -- Không gửi thêm thông báo sau khi đã trigger đủ 2 mức
+  GIVEN Cả 2 push notification (mức 1 và mức 2) đã được gửi cho phòng X
+  WHEN phòng X tiếp tục được sử dụng thêm
+  THEN hệ thống KHÔNG gửi thêm thông báo nào
+       nhưng flag mức 2 vẫn hiển thị liên tục trên màn hình Manager/Owner
+
+  AC-6 -- Chưa cài đặt ngưỡng mức 1 thì không có alert mức 1
+  GIVEN Manager chưa cài đặt ngưỡng Alert mức 1 (US-007)
+  WHEN một phòng đang active đạt bất kỳ thời gian nào
+  THEN hệ thống KHÔNG gửi thông báo mức 1 và KHÔNG hiển thị flag mức 1
+       Alert mức 2 vẫn hoạt động bình thường theo ngưỡng mặc định
+
+  AC-7 -- Flag tự động tắt khi check-out
+  GIVEN Phòng X đang hiển thị flag cảnh báo bất kỳ mức nào
+  WHEN nhân viên thực hiện check-out cho phòng X
+  THEN tất cả flag cảnh báo biến mất khỏi màn hình
+
+Business Rules:
+  BR-021: Alert chạy ngầm TRONG KHI session đang active
+          KHÔNG phụ thuộc vào thời điểm check-out
+  BR-022: Alert mức 1:
+          - Ngưỡng: do Manager cài đặt (US-007), không có giá trị mặc định
+          - Flag: hiển thị cho Staff + Manager + Owner
+          - Push notification: chỉ gửi đến Manager + Owner
+          - Mục đích: nhắc nhở về combo sắp hết, thông báo giá lẻ cho khách
+  BR-023: Alert mức 2:
+          - Ngưỡng: mặc định 12 tiếng, Manager có thể điều chỉnh (US-007)
+          - Flag: chỉ hiển thị cho Manager + Owner (không hiển thị cho Staff)
+          - Push notification: chỉ gửi đến Manager + Owner
+          - Mục đích: phát hiện bất thường nghiêm trọng
+  BR-024: Mỗi mốc chỉ tạo ra 1 push notification duy nhất trong cùng 1 session
+  BR-025: Flag tự động tắt khi session kết thúc (check-out thành công)
+
+--------------------------------------------------------------------------------
+US-007 | Cài đặt ngưỡng thời gian cảnh báo cho từng mức
+--------------------------------------------------------------------------------
+
+BRD Ref     : Room Occupancy Analytics
+Epic ID     : ROT-EP-03
+Feature ID  : ROT-EP-03-FE-04
+US ID       : ROT-EP-03-FE-04-US-007
+Priority    : Should Have
+Dependency  : Không có
+Story Points: [TBD]
+
+User Story:
+  Là một Quản lý ca cấp Manager,
+  Tôi muốn cài đặt ngưỡng thời gian cho từng mức cảnh báo theo đặc thù
+  của quán mình,
+  Để hệ thống trigger đúng lúc -- ví dụ cảnh báo mức 1 lúc 6h45 cho combo 7h,
+  hoặc 2h45 cho combo 3h -- thay vì dùng một con số cố định cho mọi quán.
+
+Acceptance Criteria:
+
+  AC-1 -- Cài đặt ngưỡng Alert mức 1 (Combo sắp hết)
+  GIVEN Manager truy cập Cài đặt > Ngưỡng Cảnh Báo
+  WHEN họ nhập thời gian ngưỡng cho Alert mức 1
+       (ví dụ: 6 giờ 45 phút, hoặc 2 giờ 45 phút)
+  THEN hệ thống lưu ngưỡng này
+       và từ lần check-in tiếp theo, session monitor sẽ dùng ngưỡng mới
+       Lưu ý: Có thể tạo nhiều ngưỡng mức 1 tương ứng với nhiều loại combo
+
+  AC-2 -- Cài đặt ngưỡng Alert mức 2 (Bất thường)
+  GIVEN Manager truy cập Cài đặt > Ngưỡng Cảnh Báo
+  WHEN họ nhập thời gian ngưỡng cho Alert mức 2
+       (ví dụ: 10 tiếng, 12 tiếng, 15 tiếng)
+  THEN hệ thống lưu ngưỡng mới
+       và áp dụng cho tất cả session từ lần check-in tiếp theo
+
+  AC-3 -- Giá trị mặc định Alert mức 2 khi chưa cài đặt
+  GIVEN Manager chưa bao giờ cài đặt ngưỡng Alert mức 2
+  WHEN hệ thống cần trigger Alert mức 2
+  THEN hệ thống dùng giá trị mặc định = 12 tiếng
+
+  AC-4 -- Validate ngưỡng đầu vào
+  GIVEN Manager đang nhập ngưỡng thời gian
+  WHEN họ nhập giá trị không hợp lệ
+       (ví dụ: 0 phút, âm, hoặc mức 1 >= mức 2)
+  THEN hệ thống hiển thị thông báo lỗi cụ thể:
+       - Nếu mức 1 >= mức 2: "Ngưỡng mức 1 phải nhỏ hơn ngưỡng mức 2"
+       - Nếu nhập 0 hoặc âm: "Vui lòng nhập thời gian lớn hơn 0"
+       và không lưu giá trị không hợp lệ
+
+  AC-5 -- Thay đổi ngưỡng không ảnh hưởng session đang active
+  GIVEN Có phòng đang active (khách đang trong phòng)
+  WHEN Manager thay đổi ngưỡng cảnh báo
+  THEN ngưỡng mới chỉ áp dụng cho session check-in SAU thời điểm thay đổi
+       Session đang active vẫn dùng ngưỡng cũ
+
+  AC-6 -- Xóa ngưỡng Alert mức 1
+  GIVEN Manager muốn tắt hoàn toàn Alert mức 1 (quán không dùng combo)
+  WHEN họ xóa hoặc để trống ngưỡng mức 1
+  THEN hệ thống lưu trạng thái "không có ngưỡng mức 1"
+       và Alert mức 1 không bao giờ trigger
+
+Business Rules:
+  BR-026: Ngưỡng Alert mức 1 là tùy chọn -- không có giá trị mặc định
+          Quán không dùng combo có thể để trống, Alert mức 1 sẽ không trigger
+  BR-027: Ngưỡng Alert mức 2 là bắt buộc -- mặc định 12 tiếng nếu chưa cài đặt
+          Hệ thống recommend Manager cài đặt ngưỡng phù hợp khi onboarding
+  BR-028: Ngưỡng mức 1 phải nhỏ hơn ngưỡng mức 2
+  BR-029: Ngưỡng thay đổi chỉ áp dụng cho session mới, không hồi tố session cũ
+  BR-030: Chỉ tài khoản Manager và Owner mới có quyền thay đổi ngưỡng cảnh báo
+  BR-031: Đơn vị thời gian: giờ và phút (ví dụ: 6h 45p)
+
+================================================================================
+TỔNG KẾT -- STORY MAP
+================================================================================
+
+  US ID                    | Tên                                        | Priority    | SP
+  -------------------------|--------------------------------------------|-------------|----
+  ROT-EP-01-FE-01-US-001   | Widget tỷ lệ phủ phòng real-time           | Must Have   | TBD
+  ROT-EP-01-FE-02-US-002   | Heatmap lịch sử phủ phòng 7×24             | Must Have   | TBD
+  ROT-EP-02-FE-01-US-003   | Widget AVG Usage Time theo loại phòng      | Must Have   | TBD
+  ROT-EP-03-FE-01-US-004   | Thông báo kín phòng                        | Should Have | TBD
+  ROT-EP-03-FE-02-US-005   | Cài đặt thông báo cá nhân (bật/tắt)       | Should Have | TBD
+  ROT-EP-03-FE-03-US-006   | Cảnh báo phòng vượt ngưỡng (Mức 1 & 2)    | Should Have | TBD
+  ROT-EP-03-FE-04-US-007   | Cài đặt ngưỡng cảnh báo                    | Should Have | TBD
+
+  Must Have  (3): US-001, US-002, US-003 -- Core analytics features
+  Should Have (4): US-004, US-005, US-006, US-007 -- Supporting notification features
+
+================================================================================
+LỊCH SỬ THAY ĐỔI
+================================================================================
+
+v0.1 | Draft đầu tiên -- 5 User Stories              | Nguyễn Tuấn Đạt | 24/10/2026
+v0.2 | Cập nhật BR-008, AC-4 US-003                  | Nguyễn Tuấn Đạt | 24/10/2026
+v0.3 | Rewrite US-006, thêm US-007, update US-005    | Nguyễn Tuấn Đạt | 24/10/2026
+v0.4 | Cập nhật MoSCoW priority                      | Nguyễn Tuấn Đạt | 24/10/2026
+v0.5 | Rewrite US-001: widget real-time, click → Heatmap | Nguyễn Tuấn Đạt | 24/10/2026
+     | Rewrite US-002: Heatmap chỉ màu sắc, không số  |                 |
+     | Tách Feature ID: FE-01 (widget) + FE-02 (heatmap)|                |
