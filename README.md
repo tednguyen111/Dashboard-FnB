@@ -59,6 +59,10 @@ Các tính năng mới được đánh dấu **chấm vàng** trên menu và **n
 
 Thẻ trên Tổng quan hiển thị % phòng đang có khách, số phòng có khách / tổng số phòng và tổng tạm tính. Bấm vào thẻ để mở sơ đồ phòng.
 
+<img width="370" height="191" alt="image" src="https://github.com/user-attachments/assets/efd1be72-ca9e-44e8-9f69-c553c660e013" />
+
+<img width="1387" height="557" alt="image" src="https://github.com/user-attachments/assets/720c0acb-0fbb-48de-9cc1-c628a748fd35" />
+
 ### 4.2 Heatmap mật độ sử dụng phòng (US-002)
 
 - **Mặc định thu gọn:** chỉ hiện 3 số liệu (tỷ lệ phủ trung bình, khung giờ cao điểm, khung giờ vắng nhất) để không làm rối Tổng quan.
