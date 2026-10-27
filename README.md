@@ -47,7 +47,7 @@ Tính toán dựa trên **giờ nhận phòng và giờ trả phòng**, không d
 | | Persona 1: Chủ quán | Persona 2: Quản lý ca | Nhân viên thu ngân |
 |---|---|---|---|
 | Tần suất | Vài lần mỗi tuần | Hằng ngày | Liên tục trong ca |
-| Thiết bị | Chủ yếu điện thoại, thường ở xa | Máy tính tại quầy | Máy tính tại quầy |
+| Thiết bị | Chủ yếu điện thoại, online | Máy tính tại quầy | Máy tính tại quầy |
 | Mục tiêu | Chiến lược: giá, combo, khuyến mãi | Vận hành: xử lý cảnh báo, triển khai khuyến mãi | Phục vụ khách, nhắc khách khi combo sắp hết |
 | Thấy được | Toàn bộ | Toàn bộ | Hiển thị cảnh báo Mức 1 & Mức 2 trên sơ đồ phòng |
 
