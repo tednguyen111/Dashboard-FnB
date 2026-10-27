@@ -1,10 +1,8 @@
-<img width="1917" height="932" alt="image" src="https://github.com/user-attachments/assets/f709e290-2c52-4739-893c-34b3ae2b2351" /># Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
+># Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
 
 Prototype mở rộng màn hình Tổng quan của phần mềm quản lý F&B (theo phong cách KiotViet) dành cho mô hình **kinh doanh theo phòng**: music box, phòng thu âm, karaoke.
 
 > Đây là dự án portfolio Business Analyst cá nhân, không liên kết với KiotViet. Dữ liệu trong prototype là dữ liệu mẫu.
-
-<img width="1917" height="932" alt="image" src="https://github.com/user-attachments/assets/fa56b2c4-167b-435e-b601-75b564df6787" />
 
 ---
 
