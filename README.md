@@ -124,21 +124,6 @@ Trang `thong-bao-dien-thoai.html` gồm 4 màn hình tương tác:
 
 <img width="1402" height="782" alt="image" src="https://github.com/user-attachments/assets/fa6b5fb2-3e0e-4d4c-bf16-038ad3ab2a62" />
 
-## 5. Hướng dẫn demo
-
-Kịch bản gợi ý cho buổi thuyết trình, khoảng 5–7 phút:
-
-1. **Tổng quan:** giới thiệu bài toán, chỉ vào 2 widget có nhãn "Mới".
-2. **Bấm dòng số liệu của heatmap** để mở lưới, rê chuột vào khung T7 20:00, rồi đổi khoảng thời gian.
-3. **Bấm "Xem chi tiết theo loại phòng"**, lọc Phòng VIP, bấm vào một ô.
-4. **Widget thời gian trung bình:** chọn "Hôm nay" để thấy nhãn "Ít dữ liệu".
-5. **Phòng/Bàn:** chỉ ra Phòng 02, 04 (Mức 1) và Phòng 06 (Mức 2), bấm vào Phòng 06.
-6. **Đổi vai trò sang "Nhân viên"** (nút góc dưới bên trái): Mức 2 biến mất.
-7. **Cài đặt:** đổi ngưỡng Mức 2 thành 13 giờ rồi lưu, quay lại Phòng/Bàn thấy cảnh báo Mức 2 biến mất.
-8. **Bấm "Xem trên điện thoại"** (góc dưới bên trái) để mở trang điện thoại, bấm "Phát lại thông báo".
-
-<img width="498" height="65" alt="image" src="https://github.com/user-attachments/assets/640fc34a-222d-4b66-a972-7125bdaf8385" />
-
 ---
 **Công nghệ:** React 19, TypeScript, Vite, Tailwind CSS v4, lucide-react.
 ---
