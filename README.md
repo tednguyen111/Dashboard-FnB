@@ -49,7 +49,7 @@ Tính toán dựa trên **giờ nhận phòng và giờ trả phòng**, không d
 | Tần suất | Vài lần mỗi tuần | Hằng ngày | Liên tục trong ca |
 | Thiết bị | Chủ yếu điện thoại, thường ở xa | Máy tính tại quầy | Máy tính tại quầy |
 | Mục tiêu | Chiến lược: giá, combo, khuyến mãi | Vận hành: xử lý cảnh báo, triển khai khuyến mãi | Phục vụ khách, nhắc khách khi combo sắp hết |
-| Thấy được | Toàn bộ | Toàn bộ | Chỉ cảnh báo Mức 1 trên sơ đồ phòng |
+| Thấy được | Toàn bộ | Toàn bộ | Hiển thị cảnh báo Mức 1 & Mức 2 trên sơ đồ phòng |
 
 ## 4. Tính năng
 
