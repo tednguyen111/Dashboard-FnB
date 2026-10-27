@@ -1,4 +1,6 @@
-## Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
+<h1 align="center" style="font-size: 2.5em; font-weight: bold;">
+  Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
+</h1>
 
 Prototype mở rộng màn hình Tổng quan của phần mềm quản lý F&B (theo phong cách KiotViet) dành cho mô hình **kinh doanh theo phòng**: music box, phòng thu âm, karaoke.
 
