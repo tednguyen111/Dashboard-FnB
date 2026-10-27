@@ -12,11 +12,6 @@ Prototype mở rộng màn hình Tổng quan của phần mềm quản lý F&B (
 2. [Giải pháp](#2-giải-pháp)
 3. [Persona](#3-persona)
 4. [Tính năng](#4-tính-năng)
-5. [Hướng dẫn demo](#5-hướng-dẫn-demo)
-6. [Cài đặt và chạy](#6-cài-đặt-và-chạy)
-7. [Mapping User Story và prototype](#7-mapping-user-story-và-prototype)
-8. [Giả định, giới hạn và câu hỏi mở](#8-giả-định-giới-hạn-và-câu-hỏi-mở)
-9. [Cấu trúc thư mục](#9-cấu-trúc-thư-mục)
 
 ---
 
