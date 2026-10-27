@@ -1,10 +1,10 @@
-# Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
+<img width="1917" height="932" alt="image" src="https://github.com/user-attachments/assets/f709e290-2c52-4739-893c-34b3ae2b2351" /># Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
 
 Prototype mở rộng màn hình Tổng quan của phần mềm quản lý F&B (theo phong cách KiotViet) dành cho mô hình **kinh doanh theo phòng**: music box, phòng thu âm, karaoke.
 
 > Đây là dự án portfolio Business Analyst cá nhân, không liên kết với KiotViet. Dữ liệu trong prototype là dữ liệu mẫu.
 
-[Ảnh: Toàn cảnh màn hình Tổng quan, có 2 widget mới]
+<img width="1917" height="932" alt="image" src="https://github.com/user-attachments/assets/fa56b2c4-167b-435e-b601-75b564df6787" />
 
 ---
 
@@ -60,7 +60,7 @@ Tính toán dựa trên **giờ nhận phòng và giờ trả phòng**, không d
 
 Các tính năng mới được đánh dấu **chấm vàng** trên menu và **nhãn "Mới"** trên widget, để người xem biết nên bấm vào đâu.
 
-[Ảnh: Thanh menu có chấm vàng đánh dấu tính năng mới]
+<img width="1595" height="70" alt="image" src="https://github.com/user-attachments/assets/4842eb0b-84ed-4cbc-8d7d-f0df50965cab" />
 
 ### 4.1 Widget tỷ lệ phủ phòng (US-001)
 
@@ -73,22 +73,21 @@ Thẻ trên Tổng quan hiển thị % phòng đang có khách, số phòng có 
 - **Chọn khoảng thời gian:** 7 ngày, 4 tuần, tháng này, tháng trước, 3 tháng hoặc **Tùy chọn** (từ ngày – đến ngày, tối thiểu 7 ngày, trong 90 ngày gần nhất).
 - **"Xem chi tiết theo loại phòng":** mở trang đầy đủ, có lọc theo loại phòng, xuất file và bảng chi tiết khi bấm vào một ô.
 
-[Ảnh: Widget heatmap ở trạng thái thu gọn]
+<img width="1226" height="170" alt="image" src="https://github.com/user-attachments/assets/eceb171f-abf9-4083-83d8-34dd449db29d" />
 
-[Ảnh: Widget heatmap đã mở, đang rê chuột vào một ô]
+<img width="1235" height="442" alt="image" src="https://github.com/user-attachments/assets/c4dc9bc3-8f55-4ee6-b249-f62fcb460406" />
 
-[Ảnh: Trang chi tiết mật độ sử dụng phòng, đang chọn một ô]
+<img width="1917" height="938" alt="image" src="https://github.com/user-attachments/assets/3073020a-0bec-46c1-8792-006c3f5ba227" />
 
-[Ảnh: Bộ chọn ngày "Tùy chọn" đang báo lỗi "Chọn ít nhất 7 ngày"]
+<img width="530" height="381" alt="image" src="https://github.com/user-attachments/assets/ee107460-115e-475a-bcf7-f80039e86c4c" />
 
 ### 4.3 Thời gian sử dụng trung bình (US-003)
 
 - Thời gian trung bình toàn quán, chênh lệch so với kỳ trước và tổng số lượt.
 - Thanh ngang cho từng loại phòng. Vạch nét đứt đánh dấu trung bình toàn quán.
-- Loại phòng có dưới 5 lượt hiện nhãn **"Ít dữ liệu"**.
 - Không tính lượt dưới 10 phút và lượt bị cảnh báo Mức 2.
 
-[Ảnh: Widget thời gian sử dụng trung bình, có nhãn "Ít dữ liệu"]
+<img width="630" height="510" alt="image" src="https://github.com/user-attachments/assets/1dc9801d-c379-4a63-adcc-0a92a85b9fcc" />
 
 ### 4.4 Sơ đồ phòng và cảnh báo (US-005)
 
@@ -97,16 +96,14 @@ Màn hình Phòng/Bàn được làm theo kiểu màn hình Thu ngân: mỗi ph�
 | Mức | Điều kiện (mặc định) | Hiển thị | Ai thấy |
 |---|---|---|---|
 | Mức 1, combo sắp hết | Combo còn ≤ 15 phút | Ô màu cam, nhãn "Còn Xp" | Tất cả nhân viên |
-| Mức 2, bất thường | Phòng dùng liên tục ≥ 12 giờ | Ô màu đỏ, nhãn "Bất thường" có chấm nhấp nháy | Chỉ Quản lý |
+| Mức 2, bất thường | Phòng dùng liên tục ≥ 12 giờ | Ô màu đỏ, nhãn "Bất thường" có chấm nhấp nháy | Tất cả nhân viên |
 
 - Nút tóm tắt "1 bất thường | 2 sắp hết combo" để lọc nhanh các phòng có cảnh báo.
 - Chuông trên thanh đầu trang liệt kê cảnh báo. Bấm vào một cảnh báo để chuyển tới đúng phòng đó.
 
-[Ảnh: Sơ đồ phòng khi xem với vai trò Quản lý, thấy cả Mức 1 và Mức 2]
+<img width="1681" height="737" alt="image" src="https://github.com/user-attachments/assets/de51161f-5cd7-44e2-978b-d6f4e1e09b41" />
 
-[Ảnh: Sơ đồ phòng khi xem với vai trò Nhân viên, Mức 2 bị ẩn]
-
-[Ảnh: Danh sách cảnh báo mở từ chuông thông báo]
+<img width="437" height="371" alt="image" src="https://github.com/user-attachments/assets/34bd9362-4682-41cf-9d4f-bf8f07149c7e" />
 
 ### 4.5 Cài đặt thông báo và ngưỡng (US-006)
 
@@ -116,9 +113,9 @@ Màn hình Phòng/Bàn được làm theo kiểu màn hình Thu ngân: mỗi ph�
 - Kiểm tra dữ liệu nhập. Trước khi lưu, trang cho xem trước số phòng sẽ bị cảnh báo với ngưỡng mới.
 - Nhân viên không chỉnh được cài đặt.
 
-[Ảnh: Trang Cài đặt thông báo]
+<img width="1456" height="932" alt="image" src="https://github.com/user-attachments/assets/b808c756-1858-4d54-b354-774543e5c6b3" />
 
-[Ảnh: Ô nhập ngưỡng đang báo lỗi]
+<img width="1232" height="286" alt="image" src="https://github.com/user-attachments/assets/a569fec8-5106-4306-9693-723416430d10" />
 
 ### 4.6 Điện thoại của Quản lý (US-004, US-005, US-006, US-007)
 
@@ -129,9 +126,9 @@ Trang `thong-bao-dien-thoai.html` gồm 4 màn hình tương tác:
 3. **Cài đặt thông báo cá nhân:** tắt một loại thì thông báo loại đó biến mất ở màn hình 1 và 2.
 4. **Mật độ phòng (US-007):** 3 số liệu chính, so sánh hôm nay với cùng thứ tuần trước, heatmap 7 × 16 cột giờ mở cửa (chạm ô để xem chi tiết), tỷ lệ phủ theo loại phòng.
 
-[Ảnh: 4 màn hình điện thoại đặt cạnh nhau]
+<img width="1402" height="782" alt="image" src="https://github.com/user-attachments/assets/fa6b5fb2-3e0e-4d4c-bf16-038ad3ab2a62" />
 
-[Ảnh: Màn hình Mật độ phòng trên điện thoại, đang chọn một ô]
+<img width="332" height="727" alt="image" src="https://github.com/user-attachments/assets/5c1d4066-d5bd-4055-abe8-d4792f484a6c" />
 
 ## 5. Hướng dẫn demo
 
@@ -146,7 +143,7 @@ Kịch bản gợi ý cho buổi thuyết trình, khoảng 5–7 phút:
 7. **Cài đặt:** đổi ngưỡng Mức 2 thành 13 giờ rồi lưu, quay lại Phòng/Bàn thấy cảnh báo Mức 2 biến mất.
 8. **Bấm "Xem trên điện thoại"** (góc dưới bên trái) để mở trang điện thoại, bấm "Phát lại thông báo".
 
-[Ảnh: Nút đổi vai trò và đường dẫn "Xem trên điện thoại" ở góc dưới bên trái]
+<img width="498" height="65" alt="image" src="https://github.com/user-attachments/assets/640fc34a-222d-4b66-a972-7125bdaf8385" />
 
 ## 6. Cài đặt và chạy
 
@@ -185,8 +182,6 @@ Tài liệu đầy đủ: [`docs/User_Stories_v0.7.txt`](docs/User_Stories_v0.7.
 | US-006 | Cài đặt thông báo và ngưỡng | Should | Cài đặt, điện thoại màn hình 3 |
 | US-007 | Mật độ phòng trên điện thoại | Should | Điện thoại, màn hình 4 |
 | US-008 | Thông báo tóm tắt tuần | Could (backlog) | Chưa làm |
-
-[Ảnh: Story map hoặc sơ đồ luồng người dùng]
 
 ## 8. Giả định, giới hạn và câu hỏi mở
 
