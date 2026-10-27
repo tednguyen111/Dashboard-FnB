@@ -1,4 +1,4 @@
-<h1 align="center" style="font-size: 2.5em; font-weight: bold;">
+<h1 style="font-size: 2.5em; font-weight: bold;">
   Room Occupancy Analytics: Phân tích độ phủ phòng cho quán thu âm, karaoke
 </h1>
 
