@@ -9,7 +9,7 @@ export function roomAlert(room: Room, settings: AlertSettings, role: Role): Room
   if (room.elapsedMinutes === undefined) return null;
   const elapsed = room.elapsedMinutes;
 
-  if (role === 'manager' && settings.level2Enabled && elapsed >= settings.level2Hours * 60) {
+  if (settings.level2Enabled && elapsed >= settings.level2Hours * 60) {
     const over = elapsed - settings.level2Hours * 60;
     return {
       roomId: room.id,

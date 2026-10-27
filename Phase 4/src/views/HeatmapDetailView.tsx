@@ -149,7 +149,7 @@ export function HeatmapDetailView({ range, custom, onRangeChange, initialCell, o
             <span className="text-ink-2">So với trung bình cùng giờ các ngày: </span>
             <span className={`font-semibold ${diffPts > 0 ? 'text-kv-green' : diffPts < 0 ? 'text-kv-red' : ''}`}>
               {diffPts > 0 ? '+' : ''}
-              {diffPts} điểm %
+              {diffPts}%
             </span>
           </div>
 

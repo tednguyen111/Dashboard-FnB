@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BellRing, Clock3, FileText, Lock, Search, Settings2, Users, Wallet } from 'lucide-react';
+import { BellRing, Clock3, FileText, Search, Settings2, Users, Wallet } from 'lucide-react';
 import type { AlertSettings, Role, Room, RoomAlert } from '../types/monitor';
 import { ROOM_TYPE_LABEL, lineTotal } from '../data/mockData';
 import { roomAlert } from '../lib/alerts';
@@ -134,8 +134,7 @@ function OrderPanel({ room, alert }: { room: Room | undefined; alert: RoomAlert 
           >
             <span className="whitespace-nowrap font-bold">Mức {alert.level}</span>
             <span className="whitespace-nowrap font-semibold">{alert.title}</span>
-            <span className="opacity-80">· {alert.detail}</span>
-            {alert.level === 2 && <Lock size={12} className="ml-auto shrink-0 opacity-70" aria-label="Chỉ quản lý" />}
+            {alert.level === 2 && <span className="opacity-80">· {alert.detail}</span>}
           </div>
         )}
 
@@ -373,11 +372,7 @@ export function RoomListView({ rooms, settings, role, alerts, focusRoomId, onFoc
             )}
           </div>
 
-          {role === 'staff' && (
-            <p className="mt-2 flex items-center gap-1.5 text-[12px] text-ink-3">
-              <Lock size={12} /> Cảnh báo Mức 2 chỉ hiển thị với Quản lý.
-            </p>
-          )}
+
 
           {visible.length === 0 ? (
             <div className="flex flex-1 items-center justify-center text-ink-3">Không có phòng nào</div>
@@ -406,11 +401,9 @@ export function RoomListView({ rooms, settings, role, alerts, focusRoomId, onFoc
             <span className="flex items-center gap-1.5">
               <span className="h-3 w-3 rounded-[3px] bg-[#FFE7C2]" /> Sắp hết combo
             </span>
-            {role === 'manager' && (
-              <span className="flex items-center gap-1.5">
-                <span className="h-3 w-3 rounded-[3px] bg-[#FFDCDC]" /> Bất thường
-              </span>
-            )}
+            <span className="flex items-center gap-1.5">
+              <span className="h-3 w-3 rounded-[3px] bg-[#FFDCDC]" /> Bất thường
+            </span>
           </div>
         </section>
 
