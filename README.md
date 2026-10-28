@@ -111,6 +111,8 @@ Màn hình Phòng/Bàn được làm theo kiểu màn hình Thu ngân: mỗi ph�
 - Kiểm tra dữ liệu nhập. Trước khi lưu, trang cho xem trước số phòng sẽ bị cảnh báo với ngưỡng mới.
 - Nhân viên không chỉnh được cài đặt.
 
+<img width="662" height="795" alt="image" src="https://github.com/user-attachments/assets/1dc65b09-12e6-4773-9956-73a374941d6d" />
+
 <img width="1456" height="932" alt="image" src="https://github.com/user-attachments/assets/b808c756-1858-4d54-b354-774543e5c6b3" />
 
 <img width="1232" height="286" alt="image" src="https://github.com/user-attachments/assets/a569fec8-5106-4306-9693-723416430d10" />
@@ -127,4 +129,4 @@ Trang `thong-bao-dien-thoai.html` gồm 4 màn hình tương tác:
 <img width="1402" height="782" alt="image" src="https://github.com/user-attachments/assets/fa6b5fb2-3e0e-4d4c-bf16-038ad3ab2a62" />
 
 ---
-**Tác giả:** Nguyễn Tuấn Đạt · Business Analyst
+**Author:** Nguyễn Tuấn Đạt · Business Analyst
